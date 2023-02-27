@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
         intentRecognizer.addCommand("apri impostazioni", new OpenSettingsCommand());
+        intentRecognizer.addCommand("apri chrome",new OpenChromeApp());
 
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
