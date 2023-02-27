@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -181,12 +182,30 @@ public class MainActivity extends AppCompatActivity {
 
                                     case "apri chrome": // case per il comando "apri chrome"
                                         boolean isAppInstalledAndUpToDate = appManager.isAppInstalled("com.android.chrome");
-                                        if(isAppInstalledAndUpToDate)
-                                            startActivity(intent);
+                                        if(isAppInstalledAndUpToDate) {
+                                            String message_one = "Applicazione presente nel dispositivo";
+                                            String message_two = "Applicazione chrome in avvio!!";
+                                            textToSpeech.speak(message_one, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+                                            textToSpeech_support.speak(message_two, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+                                            // ritardo di poco l'evento dell'apertura dell'intent
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    startActivity(intent);
+                                                }
+                                            },5000);
+                                        }
                                         break;
 
                                     default: // caso di default
-                                        startActivity(intent);
+                                        String message = "Avvio in corso!!";
+                                        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                startActivity(intent);
+                                            }
+                                        },3000);
                                         break;
                                 }
                             }
