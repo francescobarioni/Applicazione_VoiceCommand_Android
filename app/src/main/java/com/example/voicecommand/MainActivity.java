@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     // Oggetto TextToSpeech utilizzato per la riproduzione vocale di un messaggio
     private TextToSpeech textToSpeech;
     private TextToSpeech textToSpeech_support;
+    private AppManager appManager = new AppManager(this);
 
 
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
         intentRecognizer.addCommand("apri impostazioni", new OpenSettingsCommand());
-        intentRecognizer.addCommand("apri chrome",new OpenChromeApp());
+        intentRecognizer.addCommand("apri chrome",new OpenChromeCommand());
 
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
@@ -174,7 +175,20 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = intentRecognizer.recognize(command);
                             // Avvia l'intent se non è nullo
                             if (intent != null) {
-                                startActivity(intent);
+                                //startActivity(intent);
+                                command = command.toLowerCase();
+                                switch (command){
+
+                                    case "apri chrome": // case per il comando "apri chrome"
+                                        boolean isAppInstalledAndUpToDate = appManager.isAppInstalled("com.android.chrome");
+                                        if(isAppInstalledAndUpToDate)
+                                            startActivity(intent);
+                                        break;
+
+                                    default: // caso di default
+                                        startActivity(intent);
+                                        break;
+                                }
                             }
                         }
                     }
@@ -240,4 +254,5 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         speechRecognizer.stopListening();
     }
+
 }
