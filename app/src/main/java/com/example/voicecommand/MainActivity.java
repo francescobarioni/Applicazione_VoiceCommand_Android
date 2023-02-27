@@ -1,30 +1,23 @@
 package com.example.voicecommand;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.Manifest;
-
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     // Costante utilizzata per la richiesta del permesso di registrazione audio
@@ -39,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     // Oggetto TextToSpeech utilizzato per la riproduzione vocale di un messaggio
     private TextToSpeech textToSpeech;
     private TextToSpeech textToSpeech_support;
+
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         intentRecognizer = new IntentRecognizer();
 
         // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
-        intentRecognizer.addCommand("apri impostazioni", new SettingsCommand());
+        intentRecognizer.addCommand("apri impostazioni", new OpenSettingsCommand());
 
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
@@ -82,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // inizializzazione textToSpeech di supporto
         textToSpeech_support = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -101,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // Metodo chiamato quando si clicca sull'icona del microfono
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
                 intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
+
                 // Avvia la registrazione vocale
                 speechRecognizer.startListening(intent);
 
@@ -156,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                                 error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT){
 
                             // L'input vocale non è stato compreso, ripeti la richiesta
-                            repeatCommand();
+
 
                             // Si rimette in ascolto per un nuovo input vocale
                             speechRecognizer.startListening(intent);
@@ -199,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
 
     }
 
@@ -244,39 +238,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         speechRecognizer.stopListening();
-    }
-
-    // Questa classe gestisce il riconoscimento degli intent a partire dai comandi vocali.
-    private class IntentRecognizer {
-        private Map<String, IntentCommand> commands = new HashMap<>();
-
-        // Questo metodo permette di aggiungere un comando e il relativo IntentCommand al riconoscitore.
-        public void addCommand(String command, IntentCommand intentCommand) {
-            commands.put(command, intentCommand);
-        }
-
-        // Questo metodo cerca il comando vocalmente pronunciato tra quelli memorizzati,
-        // lo esegue attraverso l'IntentCommand associato e restituisce l'Intent risultante.
-        public Intent recognize(String command) {
-            IntentCommand intentCommand = commands.get(command.toLowerCase());
-            if (intentCommand != null) {
-                return intentCommand.execute();
-            }
-            return null;
-        }
-    }
-    // Questa interfaccia definisce il metodo execute per l'esecuzione di un comando.
-    private interface IntentCommand {
-        Intent execute();
-    }
-
-    // Questa classe rappresenta il comando di apertura delle impostazioni di sistema.
-    private class SettingsCommand implements IntentCommand {
-        @Override
-        public Intent execute() {
-            Intent intent = new Intent(Settings.ACTION_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            return intent;
-        }
     }
 }
