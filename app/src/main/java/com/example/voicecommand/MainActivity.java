@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech_support;
     private AppManager appManager = new AppManager(this);
 
+    private boolean openSettingsCommand = false;
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -197,15 +198,17 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         break;
 
-                                    default: // caso di default
-                                        String message = "Avvio in corso!!";
+                                    case "apri impostazioni": // case per il comando "apri impostazioni"
+                                        String message = "Applicazione impostazioni in avvio!!";
                                         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 startActivity(intent);
+                                                openSettingsCommand = true;
                                             }
                                         },3000);
+
                                         break;
                                 }
                             }
@@ -264,6 +267,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Eventuali azioni da eseguire all'apertura dell'activity
+
+        if(openSettingsCommand){ // passaggio activity delle impostazioni
+            Intent settingsIntent = new Intent(this,ActivitySettingsCommand.class);
+            startActivity(settingsIntent);
+            openSettingsCommand = false;
+        }
     }
 
     // Questo metodo viene chiamato quando l'activity viene messa in pausa
