@@ -1,4 +1,4 @@
-package com.example.voicecommand;
+package com.example.voicecommand.activity_command;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -37,6 +37,8 @@ public class ActivitySettingsCommand extends AppCompatActivity {
     private SpeechRecognizer speechRecognizer;
     private TextToSpeech textToSpeech;
 
+    private boolean accepted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +57,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
 
-        intentRecognizer.addCommand("torna indietro",new OpenNewActivityCommand(this, MainActivity.class));
+        intentRecognizer.addCommand("indietro",new OpenNewActivityCommand(this, MainActivity.class));
 
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -155,20 +157,18 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                                 command = command.toLowerCase();
                                 switch (command){
 
-                                    case "torna indietro":
+                                    case "indietro":
+                                            accepted = true;
                                             String message = "Torno indietro";
                                             textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    startActivity(intent);
-                                                }
-                                            },2000);
+                                            startActivity(intent);
                                         break;
 
                                 }
                             }
                         }
+
+                        if(!accepted) repeatCommand();
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
@@ -185,5 +185,12 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    // metodo che chiede all'utente di ripetere il comando
+    private void repeatCommand() {
+        // usa il text-to-speech per far ripetere l'istruzione all'utente
+        String message_one = "Mi dispiace, non ho capito o il comando non è presente! Potresti per favore ripetere?";
+        textToSpeech.speak(message_one, TextToSpeech.QUEUE_FLUSH, null, "messageId");
     }
 }

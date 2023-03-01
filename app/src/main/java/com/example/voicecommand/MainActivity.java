@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.voicecommand.activity_command.ActivitySettingsCommand;
 import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenSettingsCommand;
 import com.example.voicecommand.utility.AppManager;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private AppManager appManager = new AppManager(this);
 
     private boolean openSettingsCommand = false;
+    private boolean accepted = false;
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -183,11 +185,11 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = intentRecognizer.recognize(command);
                             // Avvia l'intent se non è nullo
                             if (intent != null) {
-                                //startActivity(intent);
                                 command = command.toLowerCase();
                                 switch (command){
 
                                     case "apri chrome": // case per il comando "apri chrome"
+                                        accepted = true;
                                         boolean isAppInstalledAndUpToDate = appManager.isAppInstalled("com.android.chrome");
                                         if(isAppInstalledAndUpToDate) {
                                             String message_one = "Applicazione presente nel dispositivo";
@@ -205,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                                         break;
 
                                     case "apri impostazioni": // case per il comando "apri impostazioni"
+                                        accepted = true;
                                         String message = "Applicazione impostazioni in avvio!!";
                                         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
                                         new Handler().postDelayed(new Runnable() {
@@ -217,8 +220,12 @@ public class MainActivity extends AppCompatActivity {
 
                                         break;
                                 }
+
+
                             }
                         }
+
+                        if(!accepted) repeatCommand();
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
@@ -242,10 +249,8 @@ public class MainActivity extends AppCompatActivity {
     // metodo che chiede all'utente di ripetere il comando
     private void repeatCommand() {
         // usa il text-to-speech per far ripetere l'istruzione all'utente
-        String message_one = "Mi dispiace, non ho capito!";
-        String message_two = "Potresti per favore ripetere?";
+        String message_one = "Mi dispiace, non ho capito o il comando non è presente! Potresti per favore ripetere?";
         textToSpeech.speak(message_one, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-        textToSpeech_support.speak(message_two, TextToSpeech.QUEUE_FLUSH, null, "messageId");
     }
 
     // Metodo chiamato quando l'activity viene distrutta
