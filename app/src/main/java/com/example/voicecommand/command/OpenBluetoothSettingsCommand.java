@@ -1,9 +1,11 @@
-package com.example.voicecommand;
+package com.example.voicecommand.command;
 
 import android.content.Intent;
 import android.provider.Settings;
 
-public class OpenBluetoothSettingsCommand implements ICommand{
+import com.example.voicecommand.interface_voice_command.ICommand;
+
+public class OpenBluetoothSettingsCommand implements ICommand {
 
     @Override
     public Intent execute() {

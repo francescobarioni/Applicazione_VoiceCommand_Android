@@ -17,6 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.voicecommand.command.OpenChromeCommand;
+import com.example.voicecommand.command.OpenSettingsCommand;
+import com.example.voicecommand.utility.AppManager;
+import com.example.voicecommand.utility.IntentRecognizer;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -48,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION_CODE);
         }
+
 
         // Inizializza il SpeechRecognizer per la registrazione e il riconoscimento vocale
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
@@ -269,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
         // Eventuali azioni da eseguire all'apertura dell'activity
 
         if(openSettingsCommand){ // passaggio activity delle impostazioni
-            Intent settingsIntent = new Intent(this,ActivitySettingsCommand.class);
+            Intent settingsIntent = new Intent(this, ActivitySettingsCommand.class);
             startActivity(settingsIntent);
             openSettingsCommand = false;
         }

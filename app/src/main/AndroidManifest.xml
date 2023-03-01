@@ -24,12 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VoiceCommand"
         tools:targetApi="31">
-        <activity
-            android:name=".ActivityGoBackCommand"
-            android:exported="false" />
+
         <activity
             android:name=".ActivitySettingsCommand"
-            android:exported="false" />
+            android:label="Settings">
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

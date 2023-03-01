@@ -1,10 +1,11 @@
-package com.example.voicecommand;
+package com.example.voicecommand.command;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-public class OpenChromeCommand implements ICommand{
+import com.example.voicecommand.interface_voice_command.ICommand;
+
+public class OpenChromeCommand implements ICommand {
 
     @Override
     public Intent execute() {

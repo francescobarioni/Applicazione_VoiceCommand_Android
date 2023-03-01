@@ -1,6 +1,8 @@
-package com.example.voicecommand;
+package com.example.voicecommand.utility;
 
 import android.content.Intent;
+
+import com.example.voicecommand.interface_voice_command.ICommand;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.example.voicecommand;
+package com.example.voicecommand.utility;
 
 import android.content.Context;
 import android.content.Intent;
