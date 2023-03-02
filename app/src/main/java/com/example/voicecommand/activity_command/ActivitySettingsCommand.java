@@ -7,12 +7,14 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,11 +22,13 @@ import android.widget.ImageView;
 import com.example.voicecommand.MainActivity;
 import com.example.voicecommand.R;
 import com.example.voicecommand.command.OpenBackCommand;
+import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
 import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenNewActivityCommand;
 import com.example.voicecommand.utility.IntentRecognizer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 // activity utilizzata per quando si aprono le impostazioni
@@ -38,6 +42,8 @@ public class ActivitySettingsCommand extends AppCompatActivity {
     private TextToSpeech textToSpeech;
 
     private boolean accepted = false;
+    private ArrayList<String> commandArrayList = new ArrayList<String>();
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,11 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         intentRecognizer = new IntentRecognizer();
 
         intentRecognizer.addCommand("indietro",new OpenNewActivityCommand(this, MainActivity.class));
+        commandArrayList.add("indietro");
+
+        intentRecognizer.addCommand("apri impostazioni bluetooth",new OpenBluetoothSettingsCommand());
+        commandArrayList.add("apri impostazioni bluetooth");
+
 
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -76,20 +87,35 @@ public class ActivitySettingsCommand extends AppCompatActivity {
             }
         });
 
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"");
+
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Messaggio di feedback vocale
                 String message = "Cosa posso fare per te?";
-                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+                textToSpeech.speak(message,TextToSpeech.QUEUE_FLUSH,params,"messageId");
+
                 // Prepara l'intento per la registrazione vocale
+                String prompt = "Dimmi cosa vuoi fare";
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
                 intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,prompt);
 
-                // Avvia la registrazione vocale
-                speechRecognizer.startListening(intent);
+
+                // evito il conflitto tha il thread del textToSpeech e del speechRecognizer
+                // aggiungendo un delay fra i due
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        speechRecognizer.startListening(intent);
+                    }
+                }, 1500); // 1500 millisecondi = 1.5 secondi
+
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -150,25 +176,33 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                         if (matches != null && !matches.isEmpty()) {
                             // Estrae il primo comando della lista
                             String command = matches.get(0);
+                            command = command.toLowerCase();
+                            isCommandPresent(command,commandArrayList);
+
                             // Riconosce l'intent associato al comando
                             Intent intent = intentRecognizer.recognize(command);
                             // Avvia l'intent se non è nullo
                             if (intent != null) {
-                                command = command.toLowerCase();
+
                                 switch (command){
 
-                                    case "indietro":
-                                            accepted = true;
+                                    case "indietro": // case per il comando "indietro"
                                             String message = "Torno indietro";
                                             textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
                                             startActivity(intent);
+                                        break;
+
+                                    case "apri impostazioni bluetooth": // case per il comando "apri impostazioni bluetooth"
+                                        String messageOpenBluetoothSettingsCommand = "Apertura in corso";
+                                        textToSpeech.speak(messageOpenBluetoothSettingsCommand, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+                                        startActivity(intent);
                                         break;
 
                                 }
                             }
                         }
 
-                        if(!accepted) repeatCommand();
+                        if(!accepted) repeatCommand(); // ripeti il comando nel caso
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
@@ -192,5 +226,16 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         // usa il text-to-speech per far ripetere l'istruzione all'utente
         String message_one = "Mi dispiace, non ho capito o il comando non è presente! Potresti per favore ripetere?";
         textToSpeech.speak(message_one, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+    }
+
+    private boolean isCommandPresent(String stringa, ArrayList<String> arrayList){
+        for(String elemento : arrayList){
+            if(elemento.equals(stringa)){
+                accepted = true;
+                return accepted;
+            }
+        }
+
+        return accepted;
     }
 }
