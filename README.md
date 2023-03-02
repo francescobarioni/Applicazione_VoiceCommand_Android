@@ -12,7 +12,7 @@ L'applicazione è facile da usare e supporta molte lingue diverse.
 
 # Come funziona
 Per utilizzare l'applicazione, l'utente deve semplicemente premere l'immagine del microfono e pronunciare la frase che rappresenterà il comando vocale del tipo
-"apri nome_applicazione". Si avvisa che al momento è supportato solamente l'apertura dell'applicazione "Impostazioni".
+"apri nome_applicazione".
 L'applicazione quindi utilizza la tecnologia di riconoscimento vocale di Google per convertire la voce in testo. 
 
 # Requisiti di sistema
