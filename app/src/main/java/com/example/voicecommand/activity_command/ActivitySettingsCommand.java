@@ -21,6 +21,7 @@ import android.widget.ImageView;
 
 import com.example.voicecommand.MainActivity;
 import com.example.voicecommand.R;
+import com.example.voicecommand.command.Command;
 import com.example.voicecommand.command.OpenBackCommand;
 import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
 import com.example.voicecommand.command.OpenChromeCommand;
@@ -43,7 +44,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
 
     private boolean accepted = false;
     private ArrayList<String> commandArrayList = new ArrayList<String>();
-    private Intent intent;
+    private Command cmd = new Command();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +88,12 @@ public class ActivitySettingsCommand extends AppCompatActivity {
             }
         });
 
-        Bundle params = new Bundle();
-        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"");
-
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Messaggio di feedback vocale
                 String message = "Cosa posso fare per te?";
-                textToSpeech.speak(message,TextToSpeech.QUEUE_FLUSH,params,"messageId");
+                textToSpeech.speak(message,TextToSpeech.QUEUE_FLUSH,null,"messageId");
 
                 // Prepara l'intento per la registrazione vocale
                 String prompt = "Dimmi cosa vuoi fare";
@@ -177,7 +175,8 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                             // Estrae il primo comando della lista
                             String command = matches.get(0);
                             command = command.toLowerCase();
-                            isCommandPresent(command,commandArrayList);
+                            //isCommandPresent(command,commandArrayList);
+                            accepted = cmd.isCommandPresent(command,commandArrayList);
 
                             // Riconosce l'intent associato al comando
                             Intent intent = intentRecognizer.recognize(command);
@@ -202,7 +201,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                             }
                         }
 
-                        if(!accepted) repeatCommand(); // ripeti il comando nel caso
+                        if(!accepted) cmd.repeatCommand(textToSpeech); // ripeti il comando nel caso
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
@@ -219,23 +218,5 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    // metodo che chiede all'utente di ripetere il comando
-    private void repeatCommand() {
-        // usa il text-to-speech per far ripetere l'istruzione all'utente
-        String message_one = "Mi dispiace, non ho capito o il comando non è presente! Potresti per favore ripetere?";
-        textToSpeech.speak(message_one, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-    }
-
-    private boolean isCommandPresent(String stringa, ArrayList<String> arrayList){
-        for(String elemento : arrayList){
-            if(elemento.equals(stringa)){
-                accepted = true;
-                return accepted;
-            }
-        }
-
-        return accepted;
     }
 }
