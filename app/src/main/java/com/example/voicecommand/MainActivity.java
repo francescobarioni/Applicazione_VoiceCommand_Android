@@ -68,10 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
         intentRecognizer.addCommand("apri impostazioni", new OpenSettingsCommand());
-        commandArrayList.add("apri impostazioni");
+        commandArrayList.add("apri impostazioni"); // aggiungo comando al array list
 
         intentRecognizer.addCommand("apri chrome",new OpenChromeCommand());
-        commandArrayList.add("apri chrome");
+        commandArrayList.add("apri chrome"); // aggiungo comando al array list
 
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
@@ -83,24 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 if (status == TextToSpeech.SUCCESS) {
                     // Imposta la lingua dell'output vocale (in questo caso Italiano)
                     int result = textToSpeech.setLanguage(Locale.ITALIAN);
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        // Se la lingua non è supportata, stampa un messaggio di errore
-                        Log.e("TextToSpeech", "Language not supported");
-                    }
-                } else {
-                    // Se si verifica un errore nella creazione del TextToSpeech, stampa un messaggio di errore
-                    Log.e("TextToSpeech", "Initialization failed");
-                }
-            }
-        });
-
-        // inizializzazione textToSpeech di supporto
-        textToSpeech_support = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    // Imposta la lingua dell'output vocale (in questo caso Italiano)
-                    int result = textToSpeech_support.setLanguage(Locale.ITALIAN);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         // Se la lingua non è supportata, stampa un messaggio di errore
                         Log.e("TextToSpeech", "Language not supported");
@@ -207,10 +189,9 @@ public class MainActivity extends AppCompatActivity {
                                     case "apri chrome": // case per il comando "apri chrome"
                                         boolean isAppInstalledAndUpToDate = appManager.isAppInstalled("com.android.chrome");
                                         if(isAppInstalledAndUpToDate) {
-                                            String message_one = "Applicazione presente nel dispositivo";
-                                            String message_two = "Applicazione chrome in avvio!!";
-                                            textToSpeech.speak(message_one, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-                                            textToSpeech_support.speak(message_two, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+                                            String message= "Applicazione presente nel dispositivo. Applicazione chrome in avvio!!";
+                                            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+
                                             // ritardo di poco l'evento dell'apertura dell'intent
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override
