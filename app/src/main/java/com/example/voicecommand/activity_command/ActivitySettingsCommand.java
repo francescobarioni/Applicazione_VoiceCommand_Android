@@ -68,8 +68,8 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
 
-        intentRecognizer.addCommand("indietro",new OpenNewActivityCommand(this, MainActivity.class));
-        commandArrayList.add("indietro");
+        intentRecognizer.addCommand("torna indietro",new OpenNewActivityCommand(this, MainActivity.class));
+        commandArrayList.add("torna indietro");
 
         intentRecognizer.addCommand("apri impostazioni bluetooth",new OpenBluetoothSettingsCommand());
         commandArrayList.add("apri impostazioni bluetooth");
@@ -149,7 +149,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
 
                                 switch (command){
 
-                                    case "indietro": // case per il comando "indietro"
+                                    case "torna indietro": // case per il comando "indietro"
                                             String message = "Torno indietro";
                                             textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
                                             startActivity(intent);
