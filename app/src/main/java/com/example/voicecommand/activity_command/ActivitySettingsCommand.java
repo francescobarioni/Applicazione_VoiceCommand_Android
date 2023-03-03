@@ -81,8 +81,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Messaggio di feedback vocale
-                String message = "Cosa posso fare per te?";
-                textToSpeech.speak(message,TextToSpeech.QUEUE_FLUSH,null,"messageId");
+                TextToSpeechManager.speak("Cosa posso fare per te?");
 
                 // Prepara l'intento per la registrazione vocale
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
