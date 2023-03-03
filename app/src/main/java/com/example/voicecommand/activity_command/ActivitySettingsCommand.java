@@ -27,6 +27,7 @@ import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
 import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenNewActivityCommand;
 import com.example.voicecommand.utility.IntentRecognizer;
+import com.example.voicecommand.utility.TextToSpeechManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
     private boolean accepted = false;
     private ArrayList<String> commandArrayList = new ArrayList<String>();
     private Command cmd = new Command();
+    private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,23 +72,8 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         intentRecognizer.addCommand("apri impostazioni bluetooth",new OpenBluetoothSettingsCommand());
         commandArrayList.add("apri impostazioni bluetooth");
 
-
-        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    // Imposta la lingua dell'output vocale (in questo caso Italiano)
-                    int result = textToSpeech.setLanguage(Locale.ITALIAN);
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        // Se la lingua non è supportata, stampa un messaggio di errore
-                        Log.e("TextToSpeech", "Language not supported");
-                    }
-                } else {
-                    // Se si verifica un errore nella creazione del TextToSpeech, stampa un messaggio di errore
-                    Log.e("TextToSpeech", "Initialization failed");
-                }
-            }
-        });
+        // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
+        textToSpeech = textToSpeechManager.setTextToSpeech(this);
 
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,23 +83,15 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                 textToSpeech.speak(message,TextToSpeech.QUEUE_FLUSH,null,"messageId");
 
                 // Prepara l'intento per la registrazione vocale
-                String prompt = "Dimmi cosa vuoi fare";
+                String prompt = "Attivati";
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
                 intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
                 intent.putExtra(RecognizerIntent.EXTRA_PROMPT,prompt);
 
-
-                // evito il conflitto tha il thread del textToSpeech e del speechRecognizer
-                // aggiungendo un delay fra i due
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        speechRecognizer.startListening(intent);
-                    }
-                }, 1500); // 1500 millisecondi = 1.5 secondi
+                // piccolo delay tra textToSpeech e attivazione microfono
+                textToSpeechManager.retardFirstTextToSpeechDialog(speechRecognizer,intent);
 
 
                 // Imposta un listener per il riconoscimento vocale
@@ -150,12 +129,8 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                     // Metodo chiamato quando si verifica un errore durante la registrazione vocale
                     @Override
                     public void onError(int error) {
-                        if(error == SpeechRecognizer.ERROR_NO_MATCH ||
-                                error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT){
-
+                        if(error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT){
                             // L'input vocale non è stato compreso, ripeti la richiesta
-
-
                             // Si rimette in ascolto per un nuovo input vocale
                             speechRecognizer.startListening(intent);
                         } else {

@@ -21,8 +21,10 @@ import com.example.voicecommand.activity_command.ActivitySettingsCommand;
 import com.example.voicecommand.command.Command;
 import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenSettingsCommand;
+import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.AppManager;
 import com.example.voicecommand.utility.IntentRecognizer;
+import com.example.voicecommand.utility.TextToSpeechManager;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -39,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
     // Oggetto TextToSpeech utilizzato per la riproduzione vocale di un messaggio
     private TextToSpeech textToSpeech;
-    private TextToSpeech textToSpeech_support;
     private AppManager appManager = new AppManager(this);
 
     private boolean openSettingsCommand = false;
     private boolean accepted = false;
     private ArrayList<String> commandArrayList = new ArrayList<String>();
     private Command cmd = new Command();
+    private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -77,22 +79,7 @@ public class MainActivity extends AppCompatActivity {
         microfonoImageView = findViewById(R.id.microfono);
 
         // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
-        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    // Imposta la lingua dell'output vocale (in questo caso Italiano)
-                    int result = textToSpeech.setLanguage(Locale.ITALIAN);
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        // Se la lingua non è supportata, stampa un messaggio di errore
-                        Log.e("TextToSpeech", "Language not supported");
-                    }
-                } else {
-                    // Se si verifica un errore nella creazione del TextToSpeech, stampa un messaggio di errore
-                    Log.e("TextToSpeech", "Initialization failed");
-                }
-            }
-        });
+        textToSpeech = textToSpeechManager.setTextToSpeech(this);
 
         // Metodo chiamato quando si clicca sull'icona del microfono
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
@@ -108,15 +95,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
                 intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
 
-                // evito il conflitto tha il thread del textToSpeech e del speechRecognizer
-                // aggiungendo un delay fra i due
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        speechRecognizer.startListening(intent);
-                    }
-                }, 1500); // 1500 millisecondi = 1.5 secondi
+                // piccolo delay tra textToSpeech e attivazione microfono
+                textToSpeechManager.retardFirstTextToSpeechDialog(speechRecognizer,intent);
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -266,12 +246,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Eventuali azioni da eseguire all'apertura dell'activity
-
-        if(openSettingsCommand){ // passaggio activity delle impostazioni
-            Intent settingsIntent = new Intent(this, ActivitySettingsCommand.class);
-            startActivity(settingsIntent);
-            openSettingsCommand = false;
-        }
+        ActivityManager activityManager = new ActivityManager();
+        if(openSettingsCommand) openSettingsCommand = activityManager.openNewActivity(this,ActivitySettingsCommand.class);
     }
 
     // Questo metodo viene chiamato quando l'activity viene messa in pausa

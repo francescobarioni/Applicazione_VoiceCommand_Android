@@ -28,6 +28,8 @@
             android:layout_centerHorizontal="true"
             android:text="'apri chrome' o 'apri impostazioni'" />
 
+
+
     </RelativeLayout>
 
 
