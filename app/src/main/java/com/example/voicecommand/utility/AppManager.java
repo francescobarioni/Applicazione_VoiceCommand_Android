@@ -8,7 +8,7 @@ import android.content.pm.ResolveInfo;
 import java.util.List;
 
 public class AppManager{
-    private final Context mContext;
+    private static Context mContext;
 
     // costruttore
     public AppManager(Context context){
@@ -17,7 +17,7 @@ public class AppManager{
 
 
     // metodo che verifica se un app è installata
-    public boolean isAppInstalled(String packageName){
+    public static boolean isAppInstalled(String packageName){
         boolean isInstalled = false;
         final PackageManager packageManager = mContext.getPackageManager();
         Intent intent = packageManager.getLaunchIntentForPackage(packageName);

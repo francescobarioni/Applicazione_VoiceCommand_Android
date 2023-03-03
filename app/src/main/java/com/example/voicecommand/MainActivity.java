@@ -21,6 +21,7 @@ import com.example.voicecommand.activity_command.ActivitySettingsCommand;
 import com.example.voicecommand.command.Command;
 import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenSettingsCommand;
+import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.AppManager;
 import com.example.voicecommand.utility.IntentManager;
@@ -28,7 +29,9 @@ import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     // Costante utilizzata per la richiesta del permesso di registrazione audio
@@ -45,12 +48,17 @@ public class MainActivity extends AppCompatActivity {
     private AppManager appManager = new AppManager(this);
 
     private boolean openSettingsCommand = false;
+    private boolean isAppInstalled = false;
     private boolean accepted = false;
     private ArrayList<String> commandArrayList = new ArrayList<String>();
     private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private ActivityManager activityManager = new ActivityManager();
+
+    // creazioni classi comandi
+    OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this, openSettingsCommand);
+    OpenChromeCommand chromeCommand = new OpenChromeCommand(this, isAppInstalled);
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -64,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION_CODE);
         }
 
-
         // Inizializza il SpeechRecognizer per la registrazione e il riconoscimento vocale
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
@@ -72,10 +79,11 @@ public class MainActivity extends AppCompatActivity {
         intentRecognizer = new IntentRecognizer();
 
         // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
-        intentRecognizer.addCommand("apri impostazioni", new OpenSettingsCommand());
+        intentRecognizer.addCommand("apri impostazioni", settingsCommand);
         commandArrayList.add("apri impostazioni"); // aggiungo comando al array list
 
-        intentRecognizer.addCommand("apri chrome",new OpenChromeCommand());
+        // aggiungo un comando per aprire chrome all'IntentRecognizer
+        intentRecognizer.addCommand("apri chrome", chromeCommand);
         commandArrayList.add("apri chrome"); // aggiungo comando al array list
 
         // Inizializza la ImageView del microfono
@@ -135,6 +143,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResults(Bundle results) {
                         Log.d("SpeechRecognizer", "onResults");
+
+                        // ottento un hash map <"stringa comando",comando da eseguire>
+                        Map<String, ICommand> commands = new HashMap<>();
+                        commands = intentRecognizer.getCommands();
+
                         // Estrae gli elementi della lista dei risultati
                         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                         // Verifica se la lista non è vuota
@@ -147,43 +160,10 @@ public class MainActivity extends AppCompatActivity {
                             // Riconosce l'intent associato al comando
                             Intent intent = intentRecognizer.recognize(command);
                             // Avvia l'intent se non è nullo
-                            if (intent != null) {
-                                switch (command){
-
-                                    case "apri chrome": // case per il comando "apri chrome"
-                                        boolean isAppInstalledAndUpToDate = appManager.isAppInstalled("com.android.chrome");
-                                        if(isAppInstalledAndUpToDate) {
-                                            String message= "Applicazione presente nel dispositivo. Applicazione chrome in avvio!!";
-                                            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-
-                                            // ritardo di poco l'evento dell'apertura dell'intent
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    startActivity(intent);
-                                                }
-                                            },5000);
-                                        }
-                                        break;
-
-                                    case "apri impostazioni": // case per il comando "apri impostazioni"
-                                        String message = "Applicazione impostazioni in avvio!!";
-                                        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                startActivity(intent);
-                                                openSettingsCommand = true;
-                                            }
-                                        },3000);
-
-                                        break;
-                                }
-
-
+                            if (intent != null && accepted == true) {
+                                commands.get(command).execute();
                             }
                         }
-
                         if(!accepted) cmd.repeatCommand(textToSpeech);
                     }
 
@@ -207,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         // Libera le risorse utilizzate dalla registrazione vocale e dal feedback vocale
         speechRecognizer.destroy();
-        textToSpeechManager.shutdown(textToSpeech);
+        textToSpeechManager.release();
     }
 
     // Metodo chiamato quando si ricevono i risultati della richiesta di permesso di registrazione
@@ -226,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Eventuali azioni da eseguire all'apertura dell'activity
-        if(openSettingsCommand) openSettingsCommand = activityManager.openNewActivity(this,ActivitySettingsCommand.class);
+        if(settingsCommand.isOpenSettingsCommand()) openSettingsCommand = activityManager.openNewActivity(this,ActivitySettingsCommand.class);
     }
 
     // Questo metodo viene chiamato quando l'activity viene messa in pausa

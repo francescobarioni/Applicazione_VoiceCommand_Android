@@ -27,4 +27,12 @@ public class IntentRecognizer {
 
         return null;
     }
+
+    public Map<String, ICommand> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(Map<String, ICommand> commands) {
+        this.commands = commands;
+    }
 }

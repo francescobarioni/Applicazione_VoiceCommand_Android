@@ -13,7 +13,7 @@ import java.util.Locale;
 
 public class TextToSpeechManager {
 
-    private TextToSpeech textToSpeech = null;
+    private static TextToSpeech textToSpeech = null;
 
     // metodo per impostare il textToSpeech
     public TextToSpeech setTextToSpeech(Context context){
@@ -47,7 +47,16 @@ public class TextToSpeechManager {
         }, 600); //  600 millisecondi
     }
 
-    public void shutdown(@NonNull TextToSpeech textToSpeech){
-        textToSpeech.shutdown();
+    // metodo per esprimere il messaggio
+    public static void speak(String message) {
+        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
+    }
+
+    // metodo per rilasciare le risorse
+    public  void release() {
+        if(textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
     }
 }

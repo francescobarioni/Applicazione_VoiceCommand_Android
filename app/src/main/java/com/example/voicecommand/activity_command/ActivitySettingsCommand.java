@@ -187,6 +187,6 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         super.onDestroy();
         // Libera le risorse utilizzate dalla registrazione vocale e dal feedback vocale
         speechRecognizer.destroy();
-        textToSpeechManager.shutdown(textToSpeech);
+        textToSpeechManager.release();
     }
 }
