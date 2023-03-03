@@ -37,7 +37,7 @@ public class TextToSpeechManager {
         return textToSpeech;
     }
 
-    public void retardFirstTextToSpeechDialog(SpeechRecognizer speechRecognizer, Intent intent){
+    public void retardDialog(SpeechRecognizer speechRecognizer, Intent intent){
         // evito il conflitto tha il thread del textToSpeech e del speechRecognizer
         // aggiungendo un delay fra i due
         Handler handler = new Handler();

@@ -88,7 +88,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                 intentManager.setIntent(intent);
 
                 // piccolo delay tra textToSpeech e attivazione microfono
-                textToSpeechManager.retardFirstTextToSpeechDialog(speechRecognizer,intent);
+                textToSpeechManager.retardDialog(speechRecognizer,intent);
 
 
                 // Imposta un listener per il riconoscimento vocale
@@ -165,7 +165,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                             }
                         }
 
-                        if(!accepted) cmd.repeatCommand(textToSpeech); // ripeti il comando nel caso
+                        if(!accepted) cmd.repeatListening(textToSpeech,speechRecognizer,intent); // ripeti il comando nel caso
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale

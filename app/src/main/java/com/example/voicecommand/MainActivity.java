@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private AppManager appManager = new AppManager(this);
 
     private boolean openSettingsCommand = false;
-    private boolean isAppInstalled = false;
     private boolean accepted = false;
     private ArrayList<String> commandArrayList = new ArrayList<String>();
     private Command cmd = new Command();
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     // creazioni classi comandi
     OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this, openSettingsCommand);
-    OpenChromeCommand chromeCommand = new OpenChromeCommand(this, isAppInstalled);
+    OpenChromeCommand chromeCommand = new OpenChromeCommand(this);
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 intentManager.setIntent(intent);
 
                 // piccolo delay tra textToSpeech e attivazione microfono
-                textToSpeechManager.retardFirstTextToSpeechDialog(speechRecognizer,intent);
+                textToSpeechManager.retardDialog(speechRecognizer,intent);
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                                 commands.get(command).execute();
                             }
                         }
-                        if(!accepted) cmd.repeatCommand(textToSpeech);
+                        if(!accepted) cmd.repeatListening(textToSpeech,speechRecognizer,intent);
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale

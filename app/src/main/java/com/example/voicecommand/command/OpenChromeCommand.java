@@ -12,11 +12,10 @@ import com.example.voicecommand.utility.TextToSpeechManager;
 public class OpenChromeCommand implements ICommand {
 
     private Context mContext;
-    private boolean isAppInstalled;
+    private boolean isAppInstalled = false;
 
-    public OpenChromeCommand(Context context, Boolean isAppInstalled){
+    public OpenChromeCommand(Context context){
         this.mContext = context;
-        this.isAppInstalled = isAppInstalled;
     }
 
     @Override
@@ -48,16 +47,8 @@ public class OpenChromeCommand implements ICommand {
             },5000);
 
             return intent;
-        }
+        } else {TextToSpeechManager.speak("Applicazione Chrome non installata!");}
 
         return null;
-    }
-
-    public boolean isAppInstalled() {
-        return isAppInstalled;
-    }
-
-    public void setAppInstalled(boolean appInstalled) {
-        isAppInstalled = appInstalled;
     }
 }
