@@ -3,7 +3,7 @@
 # Descrizione
 L'applicazione VoiceCommand App è un'applicazione che consente di aprire applicazioni tramite comandi vocali. 
 L'applicazione utilizza la tecnologia di riconoscimento vocale di Google per riconoscere la voce dell'utente e trasformarla in un input vocale di testo. 
-L'applicazione è facile da usare e supporta molte lingue diverse.
+L'applicazione supporta molte lingue diverse.
 
 # Caratteristiche principali
 > Comandi vocali
@@ -12,7 +12,7 @@ L'applicazione è facile da usare e supporta molte lingue diverse.
 
 # Come funziona
 Per utilizzare l'applicazione, l'utente deve semplicemente premere l'immagine del microfono e pronunciare la frase che rappresenterà il comando vocale del tipo
-"apri nome_applicazione". Si avvisa che al momento è supportato solamente l'apertura dell'applicazione "Impostazioni".
+"apri nome_applicazione".
 L'applicazione quindi utilizza la tecnologia di riconoscimento vocale di Google per convertire la voce in testo. 
 
 # Requisiti di sistema
