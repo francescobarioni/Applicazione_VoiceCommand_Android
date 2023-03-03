@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
+    private ActivityManager activityManager = new ActivityManager();
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -225,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Eventuali azioni da eseguire all'apertura dell'activity
-        ActivityManager activityManager = new ActivityManager();
         if(openSettingsCommand) openSettingsCommand = activityManager.openNewActivity(this,ActivitySettingsCommand.class);
     }
 
