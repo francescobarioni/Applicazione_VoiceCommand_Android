@@ -7,6 +7,8 @@ import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.Locale;
 
 public class TextToSpeechManager {
@@ -41,9 +43,11 @@ public class TextToSpeechManager {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
-            public void run() {
-                speechRecognizer.startListening(intent);
-            }
+            public void run() {speechRecognizer.startListening(intent);}
         }, 600); //  600 millisecondi
+    }
+
+    public void shutdown(@NonNull TextToSpeech textToSpeech){
+        textToSpeech.shutdown();
     }
 }

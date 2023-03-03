@@ -23,6 +23,7 @@ import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenSettingsCommand;
 import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.AppManager;
+import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> commandArrayList = new ArrayList<String>();
     private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
+    private IntentManager intentManager = new IntentManager(this);
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -91,60 +93,41 @@ public class MainActivity extends AppCompatActivity {
 
                 // Prepara l'intento per la registrazione vocale
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-                intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
+                intentManager.setIntent(intent);
 
                 // piccolo delay tra textToSpeech e attivazione microfono
                 textToSpeechManager.retardFirstTextToSpeechDialog(speechRecognizer,intent);
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
+                    // Metodo chiamato quando il riconoscitore vocale è pronto per la registrazione
                     @Override
-                    public void onReadyForSpeech(Bundle params) {
-                        // Metodo chiamato quando il riconoscitore vocale è pronto per la registrazione
-                        Log.d("SpeechRecognizer", "onReadyForSpeech");
-                    }
+                    public void onReadyForSpeech(Bundle params) {Log.d("SpeechRecognizer", "onReadyForSpeech");}
 
+                    // Metodo chiamato all'inizio della registrazione vocale
                     @Override
-                    public void onBeginningOfSpeech() {
-                        // Metodo chiamato all'inizio della registrazione vocale
-                        Log.d("SpeechRecognizer", "onBeginningOfSpeech");
-                    }
+                    public void onBeginningOfSpeech() {Log.d("SpeechRecognizer", "onBeginningOfSpeech");}
 
+                    // Metodo chiamato quando il livello di rumore di fondo cambia durante la registrazione vocale
                     @Override
-                    public void onRmsChanged(float rmsdB) {
-                        // Metodo chiamato quando il livello di rumore di fondo cambia durante la registrazione vocale
-                        Log.d("SpeechRecognizer", "onRmsChanged");
-                    }
+                    public void onRmsChanged(float rmsdB) {Log.d("SpeechRecognizer", "onRmsChanged");}
 
+                    // Metodo chiamato quando il riconoscitore vocale riceve un buffer di dati audio durante la registrazione
                     @Override
-                    public void onBufferReceived(byte[] buffer) {
-                        // Metodo chiamato quando il riconoscitore vocale riceve un buffer di dati audio durante la registrazione
-                        Log.d("SpeechRecognizer", "onBufferReceived");
-                    }
+                    public void onBufferReceived(byte[] buffer) {Log.d("SpeechRecognizer", "onBufferReceived");}
 
                     // Metodo chiamato quando la registrazione vocale è terminata
                     @Override
-                    public void onEndOfSpeech() {
-                        Log.d("SpeechRecognizer", "onEndOfSpeech");
-                    }
+                    public void onEndOfSpeech() {Log.d("SpeechRecognizer", "onEndOfSpeech");}
 
                     // Metodo chiamato quando si verifica un errore durante la registrazione vocale
                     @Override
                     public void onError(int error) {
-                        if(error == SpeechRecognizer.ERROR_NO_MATCH ||
-                                error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT){
-
+                        if(error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT){
                             // L'input vocale non è stato compreso, ripeti la richiesta
-
-
                             // Si rimette in ascolto per un nuovo input vocale
                             speechRecognizer.startListening(intent);
-                        } else {
-                            Log.d("SpeechRecognizer", "onError: " + error);
-                        }
-
+                        } else {Log.d("SpeechRecognizer", "onError: " + error);}
                     }
 
                     // Metodo chiamato quando la registrazione vocale ha restituito risultati
@@ -205,15 +188,11 @@ public class MainActivity extends AppCompatActivity {
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
                     @Override
-                    public void onPartialResults(Bundle partialResults) {
-                        Log.d("SpeechRecognizer", "onPartialResults");
-                    }
+                    public void onPartialResults(Bundle partialResults) {Log.d("SpeechRecognizer", "onPartialResults");}
 
                     // Metodo chiamato quando si verifica un evento non specificato
                     @Override
-                    public void onEvent(int eventType, Bundle params) {
-                        Log.d("SpeechRecognizer", "onEvent");
-                    }
+                    public void onEvent(int eventType, Bundle params) {Log.d("SpeechRecognizer", "onEvent");}
                 });
             }
         });
@@ -227,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         // Libera le risorse utilizzate dalla registrazione vocale e dal feedback vocale
         speechRecognizer.destroy();
-        textToSpeech.shutdown();
+        textToSpeechManager.shutdown(textToSpeech);
     }
 
     // Metodo chiamato quando si ricevono i risultati della richiesta di permesso di registrazione
