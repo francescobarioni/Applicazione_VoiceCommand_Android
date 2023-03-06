@@ -152,24 +152,6 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                             Intent intent = intentRecognizer.recognize(command);
                             // Avvia l'intent se non è nullo
                             if (intent != null && accepted == true) {
-
-                                /*switch (command){
-
-                                    case "torna indietro": // case per il comando "indietro"
-                                            String message = "Torno indietro";
-                                            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-                                            startActivity(intent);
-                                        break;
-
-                                    case "apri impostazioni bluetooth": // case per il comando "apri impostazioni bluetooth"
-                                            String messageOpenBluetoothSettingsCommand = "Apertura in corso";
-                                            textToSpeech.speak(messageOpenBluetoothSettingsCommand, TextToSpeech.QUEUE_FLUSH, null, "messageId");
-                                            startActivity(intent);
-                                        break;
-
-                                }
-
-                                 */
                                 commands.get(command).execute();
                             }
                         }
