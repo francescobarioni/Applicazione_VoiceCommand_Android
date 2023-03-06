@@ -7,14 +7,11 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,9 +19,7 @@ import android.widget.ImageView;
 import com.example.voicecommand.MainActivity;
 import com.example.voicecommand.R;
 import com.example.voicecommand.command.Command;
-import com.example.voicecommand.command.OpenBackCommand;
 import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
-import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenNewActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.IntentManager;
@@ -33,7 +28,6 @@ import com.example.voicecommand.utility.TextToSpeechManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 // activity utilizzata per quando si aprono le impostazioni
@@ -73,9 +67,11 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
 
+        // aggiungo comando torna indietro
         intentRecognizer.addCommand("torna indietro",openNewActivityCommand);
         commandArrayList.add("torna indietro");
 
+        // aggiungo comando per aprire le impostazioni del bluetooth
         intentRecognizer.addCommand("apri impostazioni bluetooth",openBluetoothSettingsCommand);
         commandArrayList.add("apri impostazioni bluetooth");
 
