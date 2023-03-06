@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityManager activityManager = new ActivityManager();
 
     // creazioni classi comandi
-    OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this, openSettingsCommand);
-    OpenChromeCommand chromeCommand = new OpenChromeCommand(this);
+    private OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this, openSettingsCommand);
+    private OpenChromeCommand chromeCommand = new OpenChromeCommand(this);
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                                 commands.get(command).execute();
                             }
                         }
-                        if(!accepted) cmd.repeatListening(textToSpeech,speechRecognizer,intent);
+                        if(!accepted) cmd.repeatListening(textToSpeech);
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
@@ -214,5 +214,4 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         speechRecognizer.stopListening();
     }
-
 }

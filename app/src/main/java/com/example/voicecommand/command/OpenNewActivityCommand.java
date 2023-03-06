@@ -2,8 +2,10 @@ package com.example.voicecommand.command;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 
 import com.example.voicecommand.interface_voice_command.ICommand;
+import com.example.voicecommand.utility.TextToSpeechManager;
 
 public class OpenNewActivityCommand implements ICommand {
 
@@ -16,13 +18,10 @@ public class OpenNewActivityCommand implements ICommand {
     }
     @Override
     public Intent execute() {
+        TextToSpeechManager.speak("Torno indietro");
         Intent intent = new Intent(context,destinationActivity);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return intent;
-    }
-
-    public void start(){
-        Intent intent = execute();
         context.startActivity(intent);
+        return intent;
     }
 }

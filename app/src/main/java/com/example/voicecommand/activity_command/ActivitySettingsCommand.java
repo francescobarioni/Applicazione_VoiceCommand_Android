@@ -26,6 +26,7 @@ import com.example.voicecommand.command.OpenBackCommand;
 import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
 import com.example.voicecommand.command.OpenChromeCommand;
 import com.example.voicecommand.command.OpenNewActivityCommand;
+import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.TextToSpeechManager;
@@ -33,6 +34,7 @@ import com.example.voicecommand.utility.TextToSpeechManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 // activity utilizzata per quando si aprono le impostazioni
 // da cui si possono lanciare dei sotto comandi vocali
@@ -49,6 +51,9 @@ public class ActivitySettingsCommand extends AppCompatActivity {
     private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
+
+    private OpenNewActivityCommand openNewActivityCommand = new OpenNewActivityCommand(this,MainActivity.class);
+    private OpenBluetoothSettingsCommand openBluetoothSettingsCommand = new OpenBluetoothSettingsCommand(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +73,10 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
 
-        intentRecognizer.addCommand("torna indietro",new OpenNewActivityCommand(this, MainActivity.class));
+        intentRecognizer.addCommand("torna indietro",openNewActivityCommand);
         commandArrayList.add("torna indietro");
 
-        intentRecognizer.addCommand("apri impostazioni bluetooth",new OpenBluetoothSettingsCommand());
+        intentRecognizer.addCommand("apri impostazioni bluetooth",openBluetoothSettingsCommand);
         commandArrayList.add("apri impostazioni bluetooth");
 
         // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
@@ -132,6 +137,11 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                     @Override
                     public void onResults(Bundle results) {
                         Log.d("SpeechRecognizer", "onResults");
+
+                        // ottento un hash map <"stringa comando",comando da eseguire>
+                        Map<String, ICommand> commands = new HashMap<>();
+                        commands = intentRecognizer.getCommands();
+
                         // Estrae gli elementi della lista dei risultati
                         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                         // Verifica se la lista non è vuota
@@ -145,9 +155,9 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                             // Riconosce l'intent associato al comando
                             Intent intent = intentRecognizer.recognize(command);
                             // Avvia l'intent se non è nullo
-                            if (intent != null) {
+                            if (intent != null && accepted == true) {
 
-                                switch (command){
+                                /*switch (command){
 
                                     case "torna indietro": // case per il comando "indietro"
                                             String message = "Torno indietro";
@@ -162,10 +172,13 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                                         break;
 
                                 }
+
+                                 */
+                                commands.get(command).execute();
                             }
                         }
 
-                        if(!accepted) cmd.repeatListening(textToSpeech,speechRecognizer,intent); // ripeti il comando nel caso
+                        if(!accepted) cmd.repeatListening(textToSpeech); // ripeti il comando nel caso
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
