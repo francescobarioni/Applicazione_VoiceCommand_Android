@@ -2,17 +2,16 @@ package com.example.voicecommand.command;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
-public class OpenNewActivityCommand implements ICommand {
+public class OpenBackActivityCommand implements ICommand {
 
     private Context context;
     private Class<?> destinationActivity;
 
-    public OpenNewActivityCommand(Context context, Class<?> destinationActivity){
+    public OpenBackActivityCommand(Context context, Class<?> destinationActivity){
         this.context = context;
         this.destinationActivity = destinationActivity;
     }

@@ -13,11 +13,9 @@ import com.example.voicecommand.utility.TextToSpeechManager;
 public class OpenSettingsCommand implements ICommand {
 
     private Context mcontext;
-    private boolean openSettingsCommand;
 
-    public OpenSettingsCommand(Context context,boolean openSettingsCommand){
+    public OpenSettingsCommand(Context context){
         this.mcontext = context;
-        this.openSettingsCommand = openSettingsCommand;
     }
 
     @Override
@@ -30,17 +28,8 @@ public class OpenSettingsCommand implements ICommand {
             @Override
             public void run() {
                 mcontext.startActivity(intent);
-                openSettingsCommand = true;
             }
         },3000);
         return intent;
-    }
-
-    public boolean isOpenSettingsCommand() {
-        return openSettingsCommand;
-    }
-
-    public void setOpenSettingsCommand(boolean openSettingsCommand) {
-        this.openSettingsCommand = openSettingsCommand;
     }
 }

@@ -20,7 +20,9 @@ import com.example.voicecommand.MainActivity;
 import com.example.voicecommand.R;
 import com.example.voicecommand.command.Command;
 import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
-import com.example.voicecommand.command.OpenNewActivityCommand;
+import com.example.voicecommand.command.OpenBackActivityCommand;
+import com.example.voicecommand.command.OpenSettingsCommand;
+import com.example.voicecommand.command.StopActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
@@ -46,8 +48,10 @@ public class ActivitySettingsCommand extends AppCompatActivity {
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
 
-    private OpenNewActivityCommand openNewActivityCommand = new OpenNewActivityCommand(this,MainActivity.class);
+    private OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this);
+    private OpenBackActivityCommand openBackMainActivity = new OpenBackActivityCommand(this,MainActivity.class);
     private OpenBluetoothSettingsCommand openBluetoothSettingsCommand = new OpenBluetoothSettingsCommand(this);
+    private StopActivityCommand stopActivityCommand = new StopActivityCommand(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +72,20 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         intentRecognizer = new IntentRecognizer();
 
         // aggiungo comando torna indietro
-        intentRecognizer.addCommand("torna indietro",openNewActivityCommand);
-        commandArrayList.add("torna indietro");
+        intentRecognizer.addCommand("torna alla home",openBackMainActivity);
+        commandArrayList.add("torna alla home");
+
+        // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
+        intentRecognizer.addCommand("apri impostazioni", settingsCommand);
+        commandArrayList.add("apri impostazioni"); // aggiungo comando al array list
 
         // aggiungo comando per aprire le impostazioni del bluetooth
         intentRecognizer.addCommand("apri impostazioni bluetooth",openBluetoothSettingsCommand);
         commandArrayList.add("apri impostazioni bluetooth");
+
+        // aggiungo il comando per fermare l'activity
+        intentRecognizer.addCommand("ferma applicazione",stopActivityCommand);
+        commandArrayList.add("ferma applicazione");
 
         // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
@@ -90,7 +102,6 @@ public class ActivitySettingsCommand extends AppCompatActivity {
 
                 // piccolo delay tra textToSpeech e attivazione microfono
                 textToSpeechManager.retardDialog(speechRecognizer,intent);
-
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {

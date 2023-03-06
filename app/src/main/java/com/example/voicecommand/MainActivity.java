@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -20,7 +19,9 @@ import androidx.core.content.ContextCompat;
 import com.example.voicecommand.activity_command.ActivitySettingsCommand;
 import com.example.voicecommand.command.Command;
 import com.example.voicecommand.command.OpenChromeCommand;
+import com.example.voicecommand.command.OpenActivitySettingsCommand;
 import com.example.voicecommand.command.OpenSettingsCommand;
+import com.example.voicecommand.command.StopActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.AppManager;
@@ -30,7 +31,6 @@ import com.example.voicecommand.utility.TextToSpeechManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private ActivityManager activityManager = new ActivityManager();
 
     // creazioni classi comandi
-    private OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this, openSettingsCommand);
+    private OpenActivitySettingsCommand openActivitySettingsCommand = new OpenActivitySettingsCommand(this,ActivitySettingsCommand.class);
     private OpenChromeCommand chromeCommand = new OpenChromeCommand(this);
+
+    private StopActivityCommand stopActivityCommand = new StopActivityCommand(this);
 
 
     // Metodo chiamato alla creazione dell'activity
@@ -77,13 +79,17 @@ public class MainActivity extends AppCompatActivity {
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
 
-        // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
-        intentRecognizer.addCommand("apri impostazioni", settingsCommand);
-        commandArrayList.add("apri impostazioni"); // aggiungo comando al array list
+        // aggiungo comandp per aprire activity delle impostazioni
+        intentRecognizer.addCommand("apri settings manager",openActivitySettingsCommand);
+        commandArrayList.add("apri settings manager"); // aggiungo comando all'array list
 
         // aggiungo un comando per aprire chrome all'IntentRecognizer
         intentRecognizer.addCommand("apri chrome", chromeCommand);
         commandArrayList.add("apri chrome"); // aggiungo comando al array list
+
+        // aggiungo il comando per fermare l'activity
+        intentRecognizer.addCommand("ferma applicazione",stopActivityCommand);
+        commandArrayList.add("ferma applicazione");
 
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
@@ -203,8 +209,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Eventuali azioni da eseguire all'apertura dell'activity
-        if(settingsCommand.isOpenSettingsCommand()) openSettingsCommand = activityManager.openNewActivity(this,ActivitySettingsCommand.class);
     }
 
     // Questo metodo viene chiamato quando l'activity viene messa in pausa
