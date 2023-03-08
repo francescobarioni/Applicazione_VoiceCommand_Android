@@ -134,10 +134,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                             // L'input vocale non è stato compreso, ripeti la richiesta
                             // Si rimette in ascolto per un nuovo input vocale
                             speechRecognizer.startListening(intent);
-                        } else {
-                            Log.d("SpeechRecognizer", "onError: " + error);
-                        }
-
+                        } else {Log.d("SpeechRecognizer", "onError: " + error);}
                     }
 
                     // Metodo chiamato quando la registrazione vocale ha restituito risultati
