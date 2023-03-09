@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
+import com.example.voicecommand.MainActivity;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
@@ -23,10 +24,11 @@ public class StopActivityCommand implements ICommand {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (context instanceof Activity) {
-                    ((Activity) context).finishAndRemoveTask();
-                    System.exit(0);
-                }
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                System.exit(0);
             }
         },2500);
         return null;
