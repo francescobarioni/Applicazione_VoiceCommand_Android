@@ -27,6 +27,7 @@ import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.AppManager;
 import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
+import com.example.voicecommand.utility.JsonFileManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private ActivityManager activityManager = new ActivityManager();
+    private JsonFileManager jsonFileManager = new JsonFileManager();
 
     // creazioni classi comandi
     private OpenActivitySettingsCommand openActivitySettingsCommand = new OpenActivitySettingsCommand(this,ActivitySettingsCommand.class);
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
 
+        /*
         // aggiungo comandp per aprire activity delle impostazioni
         intentRecognizer.addCommand("apri settings manager",openActivitySettingsCommand);
         commandArrayList.add("apri settings manager"); // aggiungo comando all'array list
@@ -91,11 +94,18 @@ public class MainActivity extends AppCompatActivity {
         intentRecognizer.addCommand("ferma applicazione",stopActivityCommand);
         commandArrayList.add("ferma applicazione");
 
+         */
+
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
 
         // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
+
+        // creo la stringa che conterra il file json
+        String jsonString = jsonFileManager.readJsonFile(this);
+        // aggiungo i comandi dal file json
+        jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonString);
 
         // Metodo chiamato quando si clicca sull'icona del microfono
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                         // Estrae gli elementi della lista dei risultati
                         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                         // Verifica se la lista non è vuota
-                        if (matches != null && !matches.isEmpty()) {
+                        /*if (matches != null && !matches.isEmpty()) {
                             // Estrae il primo comando della lista
                             String command = matches.get(0);
                             command = command.toLowerCase();
@@ -169,6 +179,25 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         if(!accepted) cmd.repeatListening(textToSpeech);
+                        */
+
+                        if (matches != null && !matches.isEmpty()) {
+                            // estrae il primo comando dalla lista
+                            String command = matches.get(0);
+                            command = command.toLowerCase();
+
+                            // verifica se il comando è presente nell'hashMap
+                            if(commands.containsKey(command)){
+                                // riconosce l'intent associato al comando
+                                Intent intent = intentRecognizer.recognize(command);
+                                // avvia l'intent se non è nullo
+                                if(intent != null)
+                                    commands.get(command).execute();
+                            } else {
+                                // comando non trovato nell'hashmap
+                                cmd.repeatListening(textToSpeech);
+                            }
+                        }
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale

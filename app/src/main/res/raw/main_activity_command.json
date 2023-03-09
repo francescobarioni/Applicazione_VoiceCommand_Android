@@ -1,0 +1,20 @@
+{
+  "comandi": [
+
+    {
+      "comando_vocale" : "apri settings manager",
+      "classe" : "com.example.voicecommand.command.OpenActivitySettingsCommand"
+    },
+
+    {
+      "comando_vocale" : "apri chrome",
+      "classe" : "com.example.voicecommand.command.OpenChromeCommand"
+    },
+
+    {
+      "comando_vocale" : "ferma applicazione",
+      "classe" : "com.example.voicecommand.command.StopActivityCommand"
+    }
+
+  ]
+}
