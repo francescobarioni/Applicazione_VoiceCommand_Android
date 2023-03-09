@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private JsonFileManager jsonFileManager = new JsonFileManager();
 
     // creazioni classi comandi
-    private OpenActivitySettingsCommand openActivitySettingsCommand = new OpenActivitySettingsCommand(this,ActivitySettingsCommand.class);
+    //private OpenActivitySettingsCommand openActivitySettingsCommand = new OpenActivitySettingsCommand(this,ActivitySettingsCommand.class);
     private OpenChromeCommand chromeCommand = new OpenChromeCommand(this);
 
     private StopActivityCommand stopActivityCommand = new StopActivityCommand(this);
@@ -80,21 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
-
-        /*
-        // aggiungo comandp per aprire activity delle impostazioni
-        intentRecognizer.addCommand("apri settings manager",openActivitySettingsCommand);
-        commandArrayList.add("apri settings manager"); // aggiungo comando all'array list
-
-        // aggiungo un comando per aprire chrome all'IntentRecognizer
-        intentRecognizer.addCommand("apri chrome", chromeCommand);
-        commandArrayList.add("apri chrome"); // aggiungo comando al array list
-
-        // aggiungo il comando per fermare l'activity
-        intentRecognizer.addCommand("ferma applicazione",stopActivityCommand);
-        commandArrayList.add("ferma applicazione");
-
-         */
 
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
@@ -165,22 +150,6 @@ public class MainActivity extends AppCompatActivity {
                         // Estrae gli elementi della lista dei risultati
                         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                         // Verifica se la lista non è vuota
-                        /*if (matches != null && !matches.isEmpty()) {
-                            // Estrae il primo comando della lista
-                            String command = matches.get(0);
-                            command = command.toLowerCase();
-                            accepted = cmd.isCommandPresent(command,commandArrayList);
-
-                            // Riconosce l'intent associato al comando
-                            Intent intent = intentRecognizer.recognize(command);
-                            // Avvia l'intent se non è nullo
-                            if (intent != null && accepted == true) {
-                                commands.get(command).execute();
-                            }
-                        }
-                        if(!accepted) cmd.repeatListening(textToSpeech);
-                        */
-
                         if (matches != null && !matches.isEmpty()) {
                             // estrae il primo comando dalla lista
                             String command = matches.get(0);
