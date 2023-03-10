@@ -40,7 +40,7 @@ public class TextToSpeechManager {
         return textToSpeech;
     }
 
-    public void retardDialog(SpeechRecognizer speechRecognizer, Intent intent){
+    public static void retardDialog(SpeechRecognizer speechRecognizer, Intent intent){
         // evito il conflitto tha il thread del textToSpeech e del speechRecognizer
         // aggiungendo un delay fra i due
         Handler handler = new Handler();
@@ -68,7 +68,7 @@ public class TextToSpeechManager {
 
 
     // metodo per rilasciare le risorse
-    public  void release() {
+    public static void release() {
         if(textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();

@@ -15,9 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-
 import com.example.voicecommand.interface_voice_command.ICommand;
-import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.JsonFileManager;
@@ -32,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private SpeechRecognizer speechRecognizer; // utilizzato per la registrazione
     private IntentRecognizer intentRecognizer; // utilizzato per il riconoscimento vocale
     private ImageView microfonoImageView; // ImageView utilizzata per l'interazione dell'utente con il microfono
-
-    private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private Map<Integer,String> messageMap;
 
@@ -77,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 intentManager.setIntent(intent);
 
                 // piccolo delay tra textToSpeech e attivazione microfono
-                textToSpeechManager.retardDialog(speechRecognizer,intent);
+                TextToSpeechManager.retardDialog(speechRecognizer,intent);
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -158,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         // Libera le risorse utilizzate dalla registrazione vocale e dal feedback vocale
         speechRecognizer.destroy();
-        textToSpeechManager.release();
+        TextToSpeechManager.release();
     }
 
     // Metodo chiamato quando si ricevono i risultati della richiesta di permesso di registrazione
