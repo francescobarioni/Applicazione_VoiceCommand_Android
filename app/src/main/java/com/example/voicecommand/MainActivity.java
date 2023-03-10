@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.ActivityManager;
-import com.example.voicecommand.utility.AppManager;
 import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.JsonFileManager;
@@ -37,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     // ImageView utilizzata per l'interazione dell'utente con il microfono
     private ImageView microfonoImageView;
-
-    // Oggetto TextToSpeech utilizzato per la riproduzione vocale di un messaggio
-
-    private AppManager appManager = new AppManager(this);
 
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
