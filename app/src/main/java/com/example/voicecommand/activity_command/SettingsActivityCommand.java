@@ -85,7 +85,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Messaggio di feedback vocale
-                TextToSpeechManager.speak("Cosa posso fare per te?");
+                TextToSpeechManager.speak(messageMap.get(1).toString());
 
                 // Prepara l'intento per la registrazione vocale
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -152,7 +152,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
                                     commands.get(command).execute();
                             } else {
                                 // comando non trovato nell'hashmap
-                                cmd.repeatListening(textToSpeech);
+                                TextToSpeechManager.speak(messageMap.get(2).toString());
                             }
                         }
                     }
