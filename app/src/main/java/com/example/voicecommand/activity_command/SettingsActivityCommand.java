@@ -26,6 +26,7 @@ import com.example.voicecommand.command.StopActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
+import com.example.voicecommand.utility.JsonFileManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
     private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
+    private JsonFileManager jsonFileManager = new JsonFileManager();
 
    /* private OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this);
     private GoBackMainActivityCommand openBackMainActivity = new GoBackMainActivityCommand(this,MainActivity.class);
@@ -93,6 +95,11 @@ public class SettingsActivityCommand extends AppCompatActivity {
 
         // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
+
+        // creo la stringa che conterra il file json
+        String jsonString = jsonFileManager.readJsonFile(this,"settings_activity_command");
+        // aggiungo i comandi dal file json
+        jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonString);
 
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +177,23 @@ public class SettingsActivityCommand extends AppCompatActivity {
 
                          */
 
+                        if (matches != null && !matches.isEmpty()) {
+                            // estrae il primo comando dalla lista
+                            String command = matches.get(0);
+                            command = command.toLowerCase();
 
+                            // verifica se il comando è presente nell'hashMap
+                            if(commands.containsKey(command)){
+                                // riconosce l'intent associato al comando
+                                Intent intent = intentRecognizer.recognize(command);
+                                // avvia l'intent se non è nullo
+                                if(intent != null)
+                                    commands.get(command).execute();
+                            } else {
+                                // comando non trovato nell'hashmap
+                                cmd.repeatListening(textToSpeech);
+                            }
+                        }
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
