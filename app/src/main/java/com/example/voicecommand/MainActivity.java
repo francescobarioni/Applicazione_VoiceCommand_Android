@@ -28,19 +28,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    // Costante utilizzata per la richiesta del permesso di registrazione audio
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION_CODE = 1;
-    // Oggetti utilizzati per la registrazione e la gestione del riconoscimento vocale
-    private SpeechRecognizer speechRecognizer;
-    private IntentRecognizer intentRecognizer;
-
-    // ImageView utilizzata per l'interazione dell'utente con il microfono
-    private ImageView microfonoImageView;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION_CODE = 1; // Costante utilizzata per la richiesta del permesso di registrazione audio
+    private SpeechRecognizer speechRecognizer; // utilizzato per la registrazione
+    private IntentRecognizer intentRecognizer; // utilizzato per il riconoscimento vocale
+    private ImageView microfonoImageView; // ImageView utilizzata per l'interazione dell'utente con il microfono
 
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
-    private ActivityManager activityManager = new ActivityManager();
-    private JsonFileManager jsonFileManager = new JsonFileManager();
     private Map<Integer,String> messageMap;
 
     // Metodo chiamato alla creazione dell'activity
@@ -134,15 +128,11 @@ public class MainActivity extends AppCompatActivity {
                             String command = matches.get(0);
                             command = command.toLowerCase();
 
-                            // verifica se il comando è presente nell'hashMap
-                            if(commands.containsKey(command)){
-                                // riconosce l'intent associato al comando
-                                Intent intent = intentRecognizer.recognize(command);
-                                // avvia l'intent se non è nullo
-                                if(intent != null)
-                                    commands.get(command).execute();
-                            } else {
-                                // comando non trovato nell'hashmap
+                            if(commands.containsKey(command)){// verifica se il comando è presente nell'hashMap
+                                Intent intent = intentRecognizer.recognize(command); // riconosce l'intent associato al comando
+                                if(intent != null) // avvia l'intent se non è nullo
+                                    commands.get(command).execute(); // avvio il comando
+                            } else { // comando non trovato nell'hashmap
                                 TextToSpeechManager.speak(messageMap.get(2).toString());
                             }
                         }
