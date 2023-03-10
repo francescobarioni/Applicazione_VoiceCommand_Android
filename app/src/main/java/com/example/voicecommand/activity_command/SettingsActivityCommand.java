@@ -11,25 +11,16 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.voicecommand.MainActivity;
 import com.example.voicecommand.R;
-import com.example.voicecommand.command.Command;
-import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
-import com.example.voicecommand.command.GoBackMainActivityCommand;
-import com.example.voicecommand.command.OpenSettingsCommand;
-import com.example.voicecommand.command.StopActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.JsonFileManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +34,6 @@ public class SettingsActivityCommand extends AppCompatActivity {
     private ImageView microfonoImageView;
     private IntentRecognizer intentRecognizer;
     private SpeechRecognizer speechRecognizer;
-    private TextToSpeech textToSpeech;
-    private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private JsonFileManager jsonFileManager = new JsonFileManager();
@@ -67,9 +56,6 @@ public class SettingsActivityCommand extends AppCompatActivity {
 
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
-
-        // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
-        textToSpeech = textToSpeechManager.setTextToSpeech(this);
 
         // creo la stringa che conterra il file json
         String jsonString = jsonFileManager.readJsonFile(this,"settings_activity_command");

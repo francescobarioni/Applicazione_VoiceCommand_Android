@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.voicecommand.command.Command;
+
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.AppManager;
@@ -24,8 +23,6 @@ import com.example.voicecommand.utility.IntentManager;
 import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.JsonFileManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,11 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageView microfonoImageView;
 
     // Oggetto TextToSpeech utilizzato per la riproduzione vocale di un messaggio
-    private TextToSpeech textToSpeech;
+
     private AppManager appManager = new AppManager(this);
 
-    private ArrayList<String> commandArrayList = new ArrayList<String>();
-    private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private ActivityManager activityManager = new ActivityManager();
@@ -72,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Inizializza la ImageView del microfono
         microfonoImageView = findViewById(R.id.microfono);
-
-        // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
-        textToSpeech = textToSpeechManager.setTextToSpeech(this);
 
         // creo la stringa che conterra il file json
         String jsonStringCommand = JsonFileManager.readJsonFile(this,"main_activity_command");
