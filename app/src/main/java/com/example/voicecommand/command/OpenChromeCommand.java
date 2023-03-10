@@ -9,13 +9,16 @@ import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.AppManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
+import java.util.Map;
+
 public class OpenChromeCommand implements ICommand {
 
-    private Context mContext;
+    private Context context;
     private boolean isAppInstalled = false;
+    private Map<Integer,String> messageMap;
 
     public OpenChromeCommand(Context context){
-        this.mContext = context;
+        this.context = context;
     }
 
     @Override
@@ -23,8 +26,8 @@ public class OpenChromeCommand implements ICommand {
         isAppInstalled = AppManager.isAppInstalled("com.android.chrome");
         if(isAppInstalled){
             Intent intent = new Intent();
-            String message= "Applicazione presente nel dispositivo. Applicazione chrome in avvio!!";
-            TextToSpeechManager.speak(message);
+            messageMap = TextToSpeechManager.setHashMapMessage(context);
+            TextToSpeechManager.speak(messageMap.get(5).toString());
 
             try{
                 String url = "https://www.google.it/";
@@ -42,12 +45,12 @@ public class OpenChromeCommand implements ICommand {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mContext.startActivity(intent);
+                    context.startActivity(intent);
                 }
             },5000);
 
             return intent;
-        } else {TextToSpeechManager.speak("Applicazione Chrome non installata!");}
+        } else {TextToSpeechManager.speak(messageMap.get(6).toString());}
 
         return null;
     }

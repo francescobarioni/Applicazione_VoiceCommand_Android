@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class JsonFileManager {
 
     // Metodo che legge il contenuto di un file JSON e lo restituisce come stringa
-    public String readJsonFile(Context context, String fileName){
+    public static String readJsonFile(Context context, String fileName){
         // Ottiene l'InputStream del file JSON
         int resourceId = context.getResources().getIdentifier(fileName,"raw",context.getPackageName());
         InputStream inputStream = context.getResources().openRawResource(resourceId);
@@ -30,7 +30,7 @@ public class JsonFileManager {
     }
 
     // Metodo che elabora un file JSON contenente comandi vocali e li aggiunge all'IntentRecognizer
-    public void addCommandToHashMapByJsonFile(Context context, IntentRecognizer intentRecognizer, String jsonString) {
+    public static void addCommandToHashMapByJsonFile(Context context, IntentRecognizer intentRecognizer, String jsonString) {
         try {
             // Crea un oggetto JSON a partire dalla stringa del file JSON
             JSONObject json = new JSONObject(jsonString);
@@ -77,7 +77,7 @@ public class JsonFileManager {
         }
     }
 
-    public Map<Integer,String> addMessageToHashMapByJsonFile(String jsonString) throws JSONException{
+    public static Map<Integer,String> addMessageToHashMapByJsonFile(String jsonString) throws JSONException{
         Map<Integer,String> messageMap = new HashMap<>();
 
         JSONObject jsonObject = new JSONObject(jsonString);

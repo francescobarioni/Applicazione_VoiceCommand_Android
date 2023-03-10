@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+
 import java.util.Locale;
 import java.util.Map;
 
@@ -52,6 +54,18 @@ public class TextToSpeechManager {
     public static void speak(String message) {
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
     }
+
+    public static Map<Integer,String> setHashMapMessage(Context context){
+        // aggiungo i messaggi vocali da un file json a un hashmap
+        String jsonStringMessage = JsonFileManager.readJsonFile(context,"message");
+        try {
+            return JsonFileManager.addMessageToHashMapByJsonFile(jsonStringMessage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     // metodo per rilasciare le risorse
     public  void release() {

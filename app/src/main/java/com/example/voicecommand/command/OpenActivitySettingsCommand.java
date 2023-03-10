@@ -7,10 +7,12 @@ import com.example.voicecommand.activity_command.SettingsActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
+import java.util.Map;
+
 public class OpenActivitySettingsCommand implements ICommand {
 
     private Context context;
-    //private Class<?> destinationActivity;
+    private Map<Integer,String> messageMap;
 
     public OpenActivitySettingsCommand(Context context){
         this.context = context;
@@ -18,7 +20,9 @@ public class OpenActivitySettingsCommand implements ICommand {
 
     @Override
     public Intent execute() {
-        TextToSpeechManager.speak("Avvio in corso!");
+        messageMap = TextToSpeechManager.setHashMapMessage(context);
+        TextToSpeechManager.speak(messageMap.get(3).toString());
+
         Intent intent = new Intent(context, SettingsActivityCommand.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

@@ -77,9 +77,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
         jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonString);
 
         // aggiungo i messaggi vocali da un file json a un hashmap
-        String jsonStringMessage = jsonFileManager.readJsonFile(this,"message");
-        try {messageMap = jsonFileManager.addMessageToHashMapByJsonFile(jsonStringMessage);
-        } catch (JSONException e) {e.printStackTrace();}
+        messageMap = TextToSpeechManager.setHashMapMessage(this);
 
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override

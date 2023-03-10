@@ -77,14 +77,12 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
 
         // creo la stringa che conterra il file json
-        String jsonStringCommand = jsonFileManager.readJsonFile(this,"main_activity_command");
+        String jsonStringCommand = JsonFileManager.readJsonFile(this,"main_activity_command");
         // aggiungo i comandi dal file json
-        jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonStringCommand);
+        JsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonStringCommand);
 
         // aggiungo i messaggi vocali da un file json a un hashmap
-        String jsonStringMessage = jsonFileManager.readJsonFile(this,"message");
-        try {messageMap = jsonFileManager.addMessageToHashMapByJsonFile(jsonStringMessage);
-        } catch (JSONException e) {e.printStackTrace();}
+        messageMap = TextToSpeechManager.setHashMapMessage(this);
 
         // Metodo chiamato quando si clicca sull'icona del microfono
         microfonoImageView.setOnClickListener(new View.OnClickListener() {

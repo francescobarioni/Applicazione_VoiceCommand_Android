@@ -9,7 +9,36 @@
     {
       "id" : 2,
       "text": "Mi dispiace, non ho capito o il comando non è presente! Potresti per favore ripetere?"
-    }
+    },
 
+    {
+      "id" : 3,
+      "text": "Avvio in corso!"
+    },
+
+    {
+      "id" : 4,
+      "text": "Torno indietro"
+    },
+
+    {
+      "id" : 5,
+      "text": "Applicazione presente nel dispositivo. Applicazione chrome in avvio!!"
+    },
+
+    {
+      "id" : 6,
+      "text": "Applicazione Chrome non installata!"
+    },
+
+    {
+      "id" : 7,
+      "text": "Applicazione impostazioni in avvio"
+    },
+
+    {
+      "id" : 8,
+      "text": "Chiusura dell'app in corso!"
+    }
   ]
 }
