@@ -16,12 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.voicecommand.activity_command.ActivitySettingsCommand;
 import com.example.voicecommand.command.Command;
-import com.example.voicecommand.command.OpenChromeCommand;
-import com.example.voicecommand.command.OpenActivitySettingsCommand;
-import com.example.voicecommand.command.OpenSettingsCommand;
-import com.example.voicecommand.command.StopActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.ActivityManager;
 import com.example.voicecommand.utility.AppManager;
@@ -48,21 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
     private AppManager appManager = new AppManager(this);
 
-    private boolean openSettingsCommand = false;
-    private boolean accepted = false;
     private ArrayList<String> commandArrayList = new ArrayList<String>();
     private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private ActivityManager activityManager = new ActivityManager();
     private JsonFileManager jsonFileManager = new JsonFileManager();
-
-    // creazioni classi comandi
-    //private OpenActivitySettingsCommand openActivitySettingsCommand = new OpenActivitySettingsCommand(this,ActivitySettingsCommand.class);
-    private OpenChromeCommand chromeCommand = new OpenChromeCommand(this);
-
-    private StopActivityCommand stopActivityCommand = new StopActivityCommand(this);
-
 
     // Metodo chiamato alla creazione dell'activity
     @Override
@@ -88,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
 
         // creo la stringa che conterra il file json
-        String jsonString = jsonFileManager.readJsonFile(this);
+        String jsonString = jsonFileManager.readJsonFile(this,"main_activity_command");
         // aggiungo i comandi dal file json
         jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonString);
 

@@ -1,0 +1,25 @@
+{
+  "comandi": [
+
+    {
+      "comando_vocale" : "torna alla home",
+      "classe" : "com.example.voicecommand.command.GoBackMainActivityCommand"
+    },
+
+    {
+      "comando_vocale" : "apri impostazioni",
+      "classe" : "com.example.voicecommand.command.OpenSettingsCommand"
+    },
+
+    {
+      "comando_vocale" : "apri impostazioni bluetooth",
+      "classe" : "com.example.voicecommand.command.OpenBluetoothSettingsCommand"
+    },
+
+    {
+      "comando_vocale" : "ferma applicazione",
+      "classe" : "com.example.voicecommand.command.StopActivityCommand"
+    }
+
+  ]
+}

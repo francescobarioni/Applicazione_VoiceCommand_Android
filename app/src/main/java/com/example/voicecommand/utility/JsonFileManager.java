@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.Scanner;
@@ -16,9 +17,10 @@ import java.util.Scanner;
 public class JsonFileManager {
 
     // Metodo che legge il contenuto di un file JSON e lo restituisce come stringa
-    public String readJsonFile(Context context){
+    public String readJsonFile(Context context, String fileName){
         // Ottiene l'InputStream del file JSON
-        InputStream inputStream = context.getResources().openRawResource(R.raw.main_activity_command);
+        int resourceId = context.getResources().getIdentifier(fileName,"raw",context.getPackageName());
+        InputStream inputStream = context.getResources().openRawResource(resourceId);
         // Crea una stringa con il contenuto dell'InputStream
         String jsonString = new Scanner(inputStream).useDelimiter("\\A").next();
         // Restituisce la stringa del file JSON

@@ -20,7 +20,7 @@ import com.example.voicecommand.MainActivity;
 import com.example.voicecommand.R;
 import com.example.voicecommand.command.Command;
 import com.example.voicecommand.command.OpenBluetoothSettingsCommand;
-import com.example.voicecommand.command.OpenBackActivityCommand;
+import com.example.voicecommand.command.GoBackMainActivityCommand;
 import com.example.voicecommand.command.OpenSettingsCommand;
 import com.example.voicecommand.command.StopActivityCommand;
 import com.example.voicecommand.interface_voice_command.ICommand;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 // activity utilizzata per quando si aprono le impostazioni
 // da cui si possono lanciare dei sotto comandi vocali
-public class ActivitySettingsCommand extends AppCompatActivity {
+public class SettingsActivityCommand extends AppCompatActivity {
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION_CODE = 1;
     private ImageView microfonoImageView;
@@ -48,10 +48,12 @@ public class ActivitySettingsCommand extends AppCompatActivity {
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
 
-    private OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this);
-    private OpenBackActivityCommand openBackMainActivity = new OpenBackActivityCommand(this,MainActivity.class);
+   /* private OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this);
+    private GoBackMainActivityCommand openBackMainActivity = new GoBackMainActivityCommand(this,MainActivity.class);
     private OpenBluetoothSettingsCommand openBluetoothSettingsCommand = new OpenBluetoothSettingsCommand(this);
     private StopActivityCommand stopActivityCommand = new StopActivityCommand(this);
+
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         intentRecognizer = new IntentRecognizer();
 
         // aggiungo comando torna indietro
-        intentRecognizer.addCommand("torna alla home",openBackMainActivity);
+        /*intentRecognizer.addCommand("torna alla home",openBackMainActivity);
         commandArrayList.add("torna alla home");
 
         // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
@@ -86,6 +88,8 @@ public class ActivitySettingsCommand extends AppCompatActivity {
         // aggiungo il comando per fermare l'activity
         intentRecognizer.addCommand("ferma applicazione",stopActivityCommand);
         commandArrayList.add("ferma applicazione");
+
+         */
 
         // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
@@ -123,9 +127,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
 
                     // Metodo chiamato quando la registrazione vocale è terminata
                     @Override
-                    public void onEndOfSpeech() {
-                        Log.d("SpeechRecognizer", "onEndOfSpeech");
-                    }
+                    public void onEndOfSpeech() {Log.d("SpeechRecognizer", "onEndOfSpeech");}
 
                     // Metodo chiamato quando si verifica un errore durante la registrazione vocale
                     @Override
@@ -149,7 +151,7 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                         // Estrae gli elementi della lista dei risultati
                         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                         // Verifica se la lista non è vuota
-                        if (matches != null && !matches.isEmpty()) {
+                        /*if (matches != null && !matches.isEmpty()) {
                             // Estrae il primo comando della lista
                             String command = matches.get(0);
                             command = command.toLowerCase();
@@ -165,6 +167,10 @@ public class ActivitySettingsCommand extends AppCompatActivity {
                         }
 
                         if(!accepted) cmd.repeatListening(textToSpeech); // ripeti il comando nel caso
+
+                         */
+
+
                     }
 
                     // Metodo chiamato quando sono disponibili risultati parziali della registrazione vocale
