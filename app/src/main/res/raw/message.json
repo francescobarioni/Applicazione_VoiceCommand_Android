@@ -1,0 +1,15 @@
+{
+  "messages": [
+
+    {
+      "id": 1,
+      "text": "Cosa posso fare per te?"
+    },
+
+    {
+      "id" : 2,
+      "text": "Mi dispiace, non ho capito o il comando non è presente! Potresti per favore ripetere?"
+    }
+
+  ]
+}

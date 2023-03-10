@@ -25,6 +25,8 @@ import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.JsonFileManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private IntentManager intentManager = new IntentManager(this);
     private ActivityManager activityManager = new ActivityManager();
     private JsonFileManager jsonFileManager = new JsonFileManager();
+    private Map<Integer,String> messageMap;
 
     // Metodo chiamato alla creazione dell'activity
     @Override
@@ -74,16 +77,21 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
 
         // creo la stringa che conterra il file json
-        String jsonString = jsonFileManager.readJsonFile(this,"main_activity_command");
+        String jsonStringCommand = jsonFileManager.readJsonFile(this,"main_activity_command");
         // aggiungo i comandi dal file json
-        jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonString);
+        jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonStringCommand);
+
+        // aggiungo i messaggi vocali da un file json a un hashmap
+        String jsonStringMessage = jsonFileManager.readJsonFile(this,"message");
+        try {messageMap = jsonFileManager.addMessageToHashMapByJsonFile(jsonStringMessage);
+        } catch (JSONException e) {e.printStackTrace();}
 
         // Metodo chiamato quando si clicca sull'icona del microfono
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Messaggio di feedback vocale
-                TextToSpeechManager.speak("Cosa posso fare per te?");
+                TextToSpeechManager.speak(messageMap.get(1).toString());
 
                 // Prepara l'intento per la registrazione vocale
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -150,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                                     commands.get(command).execute();
                             } else {
                                 // comando non trovato nell'hashmap
-                                cmd.repeatListening(textToSpeech);
+                                TextToSpeechManager.speak(messageMap.get(2).toString());
                             }
                         }
                     }

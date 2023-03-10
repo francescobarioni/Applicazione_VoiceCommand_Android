@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class JsonFileManager {
@@ -73,5 +75,21 @@ public class JsonFileManager {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public Map<Integer,String> addMessageToHashMapByJsonFile(String jsonString) throws JSONException{
+        Map<Integer,String> messageMap = new HashMap<>();
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+        JSONArray messagesArray = jsonObject.getJSONArray("messages");
+
+        for(int i = 0;i < messagesArray.length(); i++){
+            JSONObject messageObject = messagesArray.getJSONObject(i);
+            int id = messageObject.getInt("id");
+            String text = messageObject.getString("text");
+            messageMap.put(id,text);
+        }
+
+        return messageMap;
     }
 }

@@ -29,6 +29,8 @@ import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.JsonFileManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +48,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private JsonFileManager jsonFileManager = new JsonFileManager();
+    private Map<Integer,String> messageMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,11 @@ public class SettingsActivityCommand extends AppCompatActivity {
         String jsonString = jsonFileManager.readJsonFile(this,"settings_activity_command");
         // aggiungo i comandi dal file json
         jsonFileManager.addCommandToHashMapByJsonFile(this,intentRecognizer,jsonString);
+
+        // aggiungo i messaggi vocali da un file json a un hashmap
+        String jsonStringMessage = jsonFileManager.readJsonFile(this,"message");
+        try {messageMap = jsonFileManager.addMessageToHashMapByJsonFile(jsonStringMessage);
+        } catch (JSONException e) {e.printStackTrace();}
 
         microfonoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
