@@ -42,20 +42,10 @@ public class SettingsActivityCommand extends AppCompatActivity {
     private IntentRecognizer intentRecognizer;
     private SpeechRecognizer speechRecognizer;
     private TextToSpeech textToSpeech;
-
-    private boolean accepted = false;
-    private ArrayList<String> commandArrayList = new ArrayList<String>();
     private Command cmd = new Command();
     private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
     private IntentManager intentManager = new IntentManager(this);
     private JsonFileManager jsonFileManager = new JsonFileManager();
-
-   /* private OpenSettingsCommand settingsCommand = new OpenSettingsCommand(this);
-    private GoBackMainActivityCommand openBackMainActivity = new GoBackMainActivityCommand(this,MainActivity.class);
-    private OpenBluetoothSettingsCommand openBluetoothSettingsCommand = new OpenBluetoothSettingsCommand(this);
-    private StopActivityCommand stopActivityCommand = new StopActivityCommand(this);
-
-    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,24 +64,6 @@ public class SettingsActivityCommand extends AppCompatActivity {
 
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
-
-        // aggiungo comando torna indietro
-        /*intentRecognizer.addCommand("torna alla home",openBackMainActivity);
-        commandArrayList.add("torna alla home");
-
-        // Aggiungi un comando per aprire le impostazioni all'IntentRecognizer
-        intentRecognizer.addCommand("apri impostazioni", settingsCommand);
-        commandArrayList.add("apri impostazioni"); // aggiungo comando al array list
-
-        // aggiungo comando per aprire le impostazioni del bluetooth
-        intentRecognizer.addCommand("apri impostazioni bluetooth",openBluetoothSettingsCommand);
-        commandArrayList.add("apri impostazioni bluetooth");
-
-        // aggiungo il comando per fermare l'activity
-        intentRecognizer.addCommand("ferma applicazione",stopActivityCommand);
-        commandArrayList.add("ferma applicazione");
-
-         */
 
         // Inizializza il TextToSpeech per la riproduzione vocale di un messaggio all'utente
         textToSpeech = textToSpeechManager.setTextToSpeech(this);
@@ -158,25 +130,6 @@ public class SettingsActivityCommand extends AppCompatActivity {
                         // Estrae gli elementi della lista dei risultati
                         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                         // Verifica se la lista non è vuota
-                        /*if (matches != null && !matches.isEmpty()) {
-                            // Estrae il primo comando della lista
-                            String command = matches.get(0);
-                            command = command.toLowerCase();
-                            //isCommandPresent(command,commandArrayList);
-                            accepted = cmd.isCommandPresent(command,commandArrayList);
-
-                            // Riconosce l'intent associato al comando
-                            Intent intent = intentRecognizer.recognize(command);
-                            // Avvia l'intent se non è nullo
-                            if (intent != null && accepted == true) {
-                                commands.get(command).execute();
-                            }
-                        }
-
-                        if(!accepted) cmd.repeatListening(textToSpeech); // ripeti il comando nel caso
-
-                         */
-
                         if (matches != null && !matches.isEmpty()) {
                             // estrae il primo comando dalla lista
                             String command = matches.get(0);
