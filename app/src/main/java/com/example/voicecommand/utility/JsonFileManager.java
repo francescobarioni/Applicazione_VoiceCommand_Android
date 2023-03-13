@@ -77,19 +77,27 @@ public class JsonFileManager {
         }
     }
 
-    public static Map<Integer,String> addMessageToHashMapByJsonFile(String jsonString) throws JSONException{
-        Map<Integer,String> messageMap = new HashMap<>();
+    public static Map<Integer, String> addMessageToHashMapByJsonFile(String jsonString) throws JSONException {
+        // Crea una mappa vuota per salvare gli id e i testi dei messaggi
+        Map<Integer, String> messageMap = new HashMap<>();
 
+        // Crea un oggetto JSON dalla stringa di input
         JSONObject jsonObject = new JSONObject(jsonString);
+        // Estrae l'array di messaggi dall'oggetto JSON
         JSONArray messagesArray = jsonObject.getJSONArray("messages");
 
-        for(int i = 0;i < messagesArray.length(); i++){
+        // Loop attraverso gli oggetti di messaggio nell'array
+        for (int i = 0; i < messagesArray.length(); i++) {
+            // Estrae l'oggetto di messaggio corrente dall'array
             JSONObject messageObject = messagesArray.getJSONObject(i);
+            // Estrae l'id e il testo del messaggio corrente dall'oggetto di messaggio
             int id = messageObject.getInt("id");
             String text = messageObject.getString("text");
-            messageMap.put(id,text);
+            // Aggiunge l'id e il testo del messaggio corrente alla mappa
+            messageMap.put(id, text);
         }
 
+        // Restituisce la mappa di id e testi dei messaggi
         return messageMap;
     }
 }
