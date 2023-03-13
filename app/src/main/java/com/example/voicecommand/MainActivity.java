@@ -8,6 +8,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Messaggio di feedback vocale
                 TextToSpeechManager.speak(messageMap.get(1).toString());
+                //TextToSpeechManager.speak(messageMap.get(9).toString() + intentRecognizer.getCommands().keySet().toString());
 
                 // Prepara l'intento per la registrazione vocale
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);

@@ -39,6 +39,11 @@
     {
       "id" : 8,
       "text": "Chiusura dell'app in corso!"
+    },
+
+    {
+      "id" : 9,
+      "text": "I comandi vocali disponibili sono i seguenti:"
     }
   ]
 }

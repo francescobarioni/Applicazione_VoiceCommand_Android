@@ -2,15 +2,19 @@ package com.example.voicecommand.utility;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -41,18 +45,20 @@ public class TextToSpeechManager {
     }
 
     public static void retardDialog(SpeechRecognizer speechRecognizer, Intent intent){
+        //int delay = 600;
+        //delay += numberOfCommands * 1600;
+
         // evito il conflitto tha il thread del textToSpeech e del speechRecognizer
         // aggiungendo un delay fra i due
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {speechRecognizer.startListening(intent);}
-        }, 600); //  600 millisecondi
+        }, 600); // imposto un delay
     }
 
     // metodo per esprimere il messaggio
     public static void speak(String message) {
-
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
     }
 
@@ -66,7 +72,6 @@ public class TextToSpeechManager {
             return null;
         }
     }
-
 
     // metodo per rilasciare le risorse
     public static void release() {
