@@ -19,7 +19,7 @@ public class TextToSpeechManager {
     private static TextToSpeech textToSpeech = null;
 
     // metodo per impostare il textToSpeech
-    public TextToSpeech setTextToSpeech(Context context){
+    public static TextToSpeech setTextToSpeech(Context context){
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -52,6 +52,7 @@ public class TextToSpeechManager {
 
     // metodo per esprimere il messaggio
     public static void speak(String message) {
+
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");
     }
 
