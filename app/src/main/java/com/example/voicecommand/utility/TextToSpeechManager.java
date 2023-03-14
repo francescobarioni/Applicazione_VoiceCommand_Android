@@ -62,6 +62,19 @@ public class TextToSpeechManager {
             @Override
             public void run() {speechRecognizer.startListening(intent);}
         },dynamicDelay);
+
+        textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String s) {}
+
+            @Override
+            public void onDone(String s) {
+
+            }
+
+            @Override
+            public void onError(String s) {}
+        });
     }
 
 
