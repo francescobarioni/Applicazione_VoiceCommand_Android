@@ -17,7 +17,7 @@ public class AppManager{
 
 
     // metodo che verifica se un app è installata
-    public static boolean isAppInstalled(String packageName){
+    public static boolean isAppInstalled(Context context,String packageName){
         boolean isInstalled = false;
         final PackageManager packageManager = context.getPackageManager();
         Intent intent = packageManager.getLaunchIntentForPackage(packageName);

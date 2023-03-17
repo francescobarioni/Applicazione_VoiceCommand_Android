@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -23,7 +24,7 @@ public class TextToSpeechManager {
     private static TextToSpeech textToSpeech = null;
 
     // metodo per impostare il textToSpeech
-    public static TextToSpeech setTextToSpeech(Context context){
+    public static TextToSpeech setTextToSpeech(Context context,SpeechRecognizer speechRecognizer,Intent intent){
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -33,6 +34,8 @@ public class TextToSpeechManager {
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         // Se la lingua non è supportata, stampa un messaggio di errore
                         Log.e("TextToSpeech", "Language not supported");
+                    }else { // se la lingua è supportata imposta il listener per l'output vocale
+                        setUtteranceProgressListener(speechRecognizer,intent);
                     }
                 } else {
                     // Se si verifica un errore nella creazione del TextToSpeech, stampa un messaggio di errore
@@ -77,5 +80,30 @@ public class TextToSpeechManager {
             textToSpeech.stop();
             textToSpeech.shutdown();
         }
+    }
+
+    public static void setUtteranceProgressListener(final SpeechRecognizer speechRecognizer,final Intent intent){
+        textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            // quando l'output vocale inizia
+            @Override
+            public void onStart(String s) {}
+
+            // quando l'output vocale è completato
+            @Override
+            public void onDone(String s) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        speechRecognizer.startListening(intent);
+                    }
+                });
+            }
+
+            // in caso di errore
+            @Override
+            public void onError(String s) {
+                Log.e("TextToSpeech", "Error in speakink message");
+            }
+        });
     }
 }

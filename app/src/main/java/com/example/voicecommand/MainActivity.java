@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextToSpeechManager.setTextToSpeech(this);
-
         // Verifica se l'applicazione ha il permesso di registrazione audio, altrimenti richiedilo
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION_CODE);
@@ -48,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Inizializza il SpeechRecognizer per la registrazione e il riconoscimento vocale
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intentManager.setIntent(intent);
+
+        TextToSpeechManager.setTextToSpeech(this,speechRecognizer,intent);
 
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
@@ -71,11 +74,13 @@ public class MainActivity extends AppCompatActivity {
                 TextToSpeechManager.speak(messageMap.get(1).toString());
 
                 // Prepara l'intento per la registrazione vocale
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                /*Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intentManager.setIntent(intent);
 
+                 */
+
                 // piccolo delay tra textToSpeech e attivazione microfono
-                TextToSpeechManager.retardDialog(speechRecognizer,intent);
+                //TextToSpeechManager.retardDialog(speechRecognizer,intent);
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -127,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
                             command = command.toLowerCase();
 
                             if(commands.containsKey(command)){// verifica se il comando è presente nell'hashMap
-                                Intent intent = intentRecognizer.recognize(command); // riconosce l'intent associato al comando
-                                if(intent != null) // avvia l'intent se non è nullo
+                                Intent intent_command = intentRecognizer.recognize(command); // riconosce l'intent associato al comando
+                                if(intent_command != null) // avvia l'intent se non è nullo
                                     commands.get(command).execute(); // avvio il comando
                             } else { // comando non trovato nell'hashmap
                                 TextToSpeechManager.speak(messageMap.get(2).toString());

@@ -23,7 +23,7 @@ public class OpenChromeCommand implements ICommand {
 
     @Override
     public Intent execute() {
-        isAppInstalled = AppManager.isAppInstalled("com.android.chrome");
+        isAppInstalled = AppManager.isAppInstalled(this.context,"com.android.chrome");
         if(isAppInstalled){
             Intent intent = new Intent();
             messageMap = TextToSpeechManager.setHashMapMessage(context);

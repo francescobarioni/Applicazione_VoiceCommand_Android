@@ -34,7 +34,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
     private ImageView microfonoImageView;
     private IntentRecognizer intentRecognizer;
     private SpeechRecognizer speechRecognizer;
-    private TextToSpeechManager textToSpeechManager = new TextToSpeechManager();
+    private TextToSpeechManager textToSpeechManager;
     private IntentManager intentManager = new IntentManager(this);
     private JsonFileManager jsonFileManager = new JsonFileManager();
     private Map<Integer,String> messageMap;
@@ -53,6 +53,8 @@ public class SettingsActivityCommand extends AppCompatActivity {
 
         // Inizializza il SpeechRecognizer per la registrazione e il riconoscimento vocale
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+
+        textToSpeechManager  = new TextToSpeechManager();
 
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
