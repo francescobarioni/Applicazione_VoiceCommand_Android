@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.speech.SpeechRecognizer;
 
 import com.example.voicecommand.interface_voice_command.ICommand;
 import com.example.voicecommand.utility.AppManager;
