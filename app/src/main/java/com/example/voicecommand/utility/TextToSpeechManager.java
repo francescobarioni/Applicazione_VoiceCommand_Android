@@ -47,17 +47,6 @@ public class TextToSpeechManager {
         return textToSpeech;
     }
 
-    public static void retardDialog(SpeechRecognizer speechRecognizer, Intent intent){
-        // evito il conflitto tha il thread del textToSpeech e del speechRecognizer
-        // aggiungendo un delay fra i due
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {speechRecognizer.startListening(intent);}
-        }, 600); // imposto un delay
-    }
-
-
     // metodo per esprimere il messaggio
     public static void speak(String message) {
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "messageId");

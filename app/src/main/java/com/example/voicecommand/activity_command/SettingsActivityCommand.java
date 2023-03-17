@@ -39,6 +39,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
     private IntentManager intentManager = new IntentManager(this);
     private JsonFileManager jsonFileManager = new JsonFileManager();
     private Map<Integer,String> messageMap;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class SettingsActivityCommand extends AppCompatActivity {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
         // Prepara l'intento per la registrazione vocale
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intentManager.setIntent(intent);
 
         // setto il text to speech
@@ -161,5 +162,18 @@ public class SettingsActivityCommand extends AppCompatActivity {
         // Libera le risorse utilizzate dalla registrazione vocale e dal feedback vocale
         speechRecognizer.destroy();
         TextToSpeechManager.release();
+    }
+
+    // Metodo chiamato quando l'activity riprende l'esecuzione
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    // Questo metodo viene chiamato quando l'activity viene messa in pausa
+    // e serve per interrompere la registrazione audio.
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }

@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView microfonoImageView; // ImageView utilizzata per l'interazione dell'utente con il microfono
     private IntentManager intentManager = new IntentManager(this);
     private Map<Integer,String> messageMap;
+    private Intent intent;
 
     // Metodo chiamato alla creazione dell'activity
     @Override
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         // Inizializza il SpeechRecognizer per la registrazione e il riconoscimento vocale
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intentManager.setIntent(intent);
 
         TextToSpeechManager.setTextToSpeech(this,speechRecognizer,intent);
@@ -72,15 +73,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Messaggio di feedback vocale
                 TextToSpeechManager.speak(messageMap.get(1).toString());
-
-                // Prepara l'intento per la registrazione vocale
-                /*Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intentManager.setIntent(intent);
-
-                 */
-
-                // piccolo delay tra textToSpeech e attivazione microfono
-                //TextToSpeechManager.retardDialog(speechRecognizer,intent);
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -186,6 +178,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        speechRecognizer.stopListening();
     }
 }
