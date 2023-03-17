@@ -54,29 +54,6 @@ public class TextToSpeechManager {
         }, 600); // imposto un delay
     }
 
-    public static void retardDialogReimplementation(SpeechRecognizer speechRecognizer,Intent intent, int dimHashMap){
-        int defaultDelay = 600;
-        int dynamicDelay = defaultDelay + (dimHashMap * 550);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {speechRecognizer.startListening(intent);}
-        },dynamicDelay);
-
-        textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-            @Override
-            public void onStart(String s) {}
-
-            @Override
-            public void onDone(String s) {
-
-            }
-
-            @Override
-            public void onError(String s) {}
-        });
-    }
-
 
     // metodo per esprimere il messaggio
     public static void speak(String message) {
