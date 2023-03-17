@@ -2,7 +2,7 @@
   "comandi": [
 
     {
-      "comando_vocale" : "torna alla home",
+      "comando_vocale" : "torna indietro",
       "classe" : "com.example.voicecommand.command.GoBackMainActivityCommand"
     },
 

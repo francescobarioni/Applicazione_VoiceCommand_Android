@@ -22,6 +22,8 @@ import com.example.voicecommand.utility.IntentRecognizer;
 import com.example.voicecommand.utility.JsonFileManager;
 import com.example.voicecommand.utility.TextToSpeechManager;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +36,6 @@ public class SettingsActivityCommand extends AppCompatActivity {
     private ImageView microfonoImageView;
     private IntentRecognizer intentRecognizer;
     private SpeechRecognizer speechRecognizer;
-    private TextToSpeechManager textToSpeechManager;
     private IntentManager intentManager = new IntentManager(this);
     private JsonFileManager jsonFileManager = new JsonFileManager();
     private Map<Integer,String> messageMap;
@@ -54,7 +55,12 @@ public class SettingsActivityCommand extends AppCompatActivity {
         // Inizializza il SpeechRecognizer per la registrazione e il riconoscimento vocale
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
-        textToSpeechManager  = new TextToSpeechManager();
+        // Prepara l'intento per la registrazione vocale
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intentManager.setIntent(intent);
+
+        // setto il text to speech
+        TextToSpeechManager.setTextToSpeech(this,speechRecognizer,intent);
 
         // Inizializza l'IntentRecognizer per la gestione degli intent
         intentRecognizer = new IntentRecognizer();
@@ -72,13 +78,6 @@ public class SettingsActivityCommand extends AppCompatActivity {
             public void onClick(View view) {
                 // Messaggio di feedback vocale
                 TextToSpeechManager.speak(messageMap.get(1).toString());
-
-                // Prepara l'intento per la registrazione vocale
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intentManager.setIntent(intent);
-
-                // piccolo delay tra textToSpeech e attivazione microfono
-                textToSpeechManager.retardDialog(speechRecognizer,intent);
 
                 // Imposta un listener per il riconoscimento vocale
                 speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -132,9 +131,9 @@ public class SettingsActivityCommand extends AppCompatActivity {
                             // verifica se il comando è presente nell'hashMap
                             if(commands.containsKey(command)){
                                 // riconosce l'intent associato al comando
-                                Intent intent = intentRecognizer.recognize(command);
+                                Intent intent_command = intentRecognizer.recognize(command);
                                 // avvia l'intent se non è nullo
-                                if(intent != null)
+                                if(intent_command != null)
                                     commands.get(command).execute();
                             } else {
                                 // comando non trovato nell'hashmap
@@ -161,6 +160,6 @@ public class SettingsActivityCommand extends AppCompatActivity {
         super.onDestroy();
         // Libera le risorse utilizzate dalla registrazione vocale e dal feedback vocale
         speechRecognizer.destroy();
-        textToSpeechManager.release();
+        TextToSpeechManager.release();
     }
 }
